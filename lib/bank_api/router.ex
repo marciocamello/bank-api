@@ -39,41 +39,70 @@ defmodule BankApi.Router do
   end
 
   @doc """
-  Default route to logged user account
+  Show account logged
   """
-  get "/api/account" do
-    account = %{
-      firstName: "Marcio",
-      lastName: "André",
-      email: "marciocamello@outlook.com",
-      phone: "37 98406 2829"
-    }
+  get "/api/customers" do
+    customers = Customers.list_customers()
 
-    render_json(conn, %{account: account})
-  end
-
-  def convert_changeset_errors(changeset) do
-    out =
-      Ecto.Changeset.errors(changeset, fn {msg, opts} ->
-        Enum.reduce(opts, msg, fn {key, value}, acc ->
-          String.replace(acc, "%{#{key}}", to_string(value))
-        end)
-      end)
-
-    out
+    render_json(conn, %{message: "Customer liested with success!", customers: customers})
   end
 
   @doc """
-  Default route to logged user account
+  Create account route
   """
-  post "/api/account" do
-    account = conn.body_params["account"]
+  post "/api/customers" do
+    %{"customer" => customer} = conn.body_params
 
-    case Customers.create_customer(account) do
-      {:ok, _account} ->
-        render_json(conn, _account)
+    case Customers.create_customer(customer) do
+      {:ok, _customer} ->
+        render_json(conn, %{message: "Customer created with success!", customer: _customer})
       {:error, _changeset} ->
         render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
+    end
+  end
+
+  @doc """
+  Show user logged by id
+  """
+  get "/api/customers/:id" do
+    %{"id" => id} = conn.path_params
+
+    case Customers.get_customer(id) do
+      nil ->
+        render_json(conn, %{errors: "This customer do not exist"})
+      customer ->
+        render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+      end
+  end
+
+  @doc """
+  Update user logged by id
+  """
+  put "/api/customers/:id" do
+    %{"id" => id} = conn.path_params
+    %{"customer" => params} = conn.body_params
+
+    case Customers.get_customer(id) do
+      nil ->
+        render_json(conn, %{errors: "This customer do not exist"})
+      customer ->
+        Customers.update_customer(customer, params)
+        render_json(conn, %{message: "Customer updated with success!", customer: customer })
+    end
+  end
+
+  @doc """
+  Delete user logged by id
+  """
+  delete "/api/customers/:id" do
+    %{"id" => id} = conn.path_params
+
+    case Customers.get_customer(id) do
+      nil ->
+        render_json(conn, %{errors: "This customer do not exist"})
+      customer ->
+        Customers.delete_customer(customer)
+        render_json(conn, %{message: "Customer deleted with success!" })
     end
   end
 
