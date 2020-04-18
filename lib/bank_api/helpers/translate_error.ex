@@ -1,5 +1,4 @@
 defmodule BankApi.Helpers.TranslateError do
-
   @moduledoc """
   Provides helper functions
   """
