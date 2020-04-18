@@ -16,3 +16,7 @@ config :bank_api, cowboy_port: 4000
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :bank_api, BankApi.Auth.Guardian,
+  issuer: "bank_api",
+  secret_key: "pSk7JYofPSxwMP0RZNNLccu2+DPJtHQLcIiK2Qk4RCK++imQoFAJTLz2WE0GpeJI"

@@ -1,14 +1,18 @@
 defmodule BankApi.Controllers.Customer do
-  @moduledoc """
-  """
+  @moduledoc false
+  use Plug.Router
   alias BankApi.Helpers.TranslateError
   alias BankApi.Models.Customers
   alias BankApi.Router
 
+  plug(:match)
+  plug BankApi.Auth.Pipeline
+  plug(:dispatch)
+
   @doc """
   Show account logged
   """
-  def index(conn) do
+  get "/" do
     customers = Customers.list_customers()
 
     Router.render_json(conn, %{message: "Customer liested with success!", customers: customers})
@@ -17,7 +21,7 @@ defmodule BankApi.Controllers.Customer do
   @doc """
   Create account route
   """
-  def create(conn) do
+  post "/" do
     %{"customer" => customer} = conn.body_params
 
     case Customers.create_customer(customer) do
@@ -31,7 +35,7 @@ defmodule BankApi.Controllers.Customer do
   @doc """
   Show user logged by id
   """
-  def show(conn) do
+  get "/:id" do
     %{"id" => id} = conn.path_params
 
     case Customers.get_customer(id) do
@@ -39,13 +43,13 @@ defmodule BankApi.Controllers.Customer do
         Router.render_json(conn, %{errors: "This customer do not exist"})
       customer ->
         Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
-      end
+    end
   end
 
   @doc """
   Update user logged by id
   """
-  def update(conn) do
+  put "/:id" do
     %{"id" => id} = conn.path_params
     %{"customer" => params} = conn.body_params
 
@@ -61,7 +65,7 @@ defmodule BankApi.Controllers.Customer do
   @doc """
   Delete user logged by id
   """
-  def delete(conn) do
+  delete "/:id" do
     %{"id" => id} = conn.path_params
 
     case Customers.get_customer(id) do

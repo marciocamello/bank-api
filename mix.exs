@@ -41,7 +41,8 @@ defmodule BankApi.MixProject do
       {:jason, "~> 1.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:bcrypt_elixir, "~> 2.0"},
-      {:credo, "~> 1.3", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
+      {:guardian, "~> 2.0"}
     ]
   end
 end

@@ -2,8 +2,9 @@ defmodule BankApi.Router do
   @moduledoc """
   """
   use Plug.Router
-  alias BankApi.Controllers.{Home, Customer}
-  alias BankApi.Plug.VerifyRequest
+  alias BankApi.Plugs.VerifyRequest
+  alias BankApi.Plugs.{RequireAuth}
+  alias BankApi.Controllers.{Auth, Home, Customer}
 
   plug(:match)
 
@@ -14,6 +15,7 @@ defmodule BankApi.Router do
   )
 
   plug(:dispatch)
+
 
   @doc """
   Render parser to request data from route
@@ -30,15 +32,14 @@ defmodule BankApi.Router do
     render_json(conn, %{message: "pong", status: 200})
   end
 
-  # Home routes
-  get "/", do: Home.index(conn)
+  # Auth routes
+  forward "/api/login", to: Auth
 
-  # Customers routes
-  get "/api/customers", do: Customer.index(conn)
-  get "/api/customers/:id", do: Customer.show(conn)
-  post "/api/customers", do: Customer.create(conn)
-  put "/api/customers/:id", do: Customer.update(conn)
-  delete "/api/customers/:id", do: Customer.delete(conn)
+  # Customer routes
+  forward "/api/customers", to: Customer
+
+  # Home routes
+  forward "/", to: Home
 
   @doc """
   Default route to page not found
