@@ -6,17 +6,19 @@ defmodule BankApi.MixProject do
       app: :bank_api,
       version: "0.1.0",
       elixir: "~> 1.10",
+      description:
+        "Financial application, create customers and accounts, and operations financials.",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
 
       # Docs
       name: "BankApi",
-      source_url: "https://github.com/USER/PROJECT",
-      homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
+      source_url: "https://gitlab.com/marcio-elixir/bank-api",
+      homepage_url: "https://gitlab.com/marcio-elixir/bank-api",
       docs: [
         # The main page in the docs
-        main: "BankApi",
-        # logo: "path/to/logo.png",
+        main: "readme",
+        logo: "logo.png",
         extras: ["README.md"]
       ]
     ]
