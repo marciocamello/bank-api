@@ -23,5 +23,12 @@ defmodule BankApi.Application do
     Supervisor.start_link(children, opts)
   end
 
-  defp cowboy_port, do: Application.get_env(:bank_api, :cowboy_port, 4000)
+  defp cowboy_port() do
+    port_env_variable = System.get_env("PORT")
+    if is_nil(port_env_variable) do
+      4000
+    else
+      String.to_integer(port_env_variable)
+    end
+  end
 end
