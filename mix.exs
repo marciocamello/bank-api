@@ -10,7 +10,6 @@ defmodule BankApi.MixProject do
       description:
         "Financial application, create customers and accounts, and operations financials.",
       build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
       deps: deps(),
       aliases: aliases(),
 
