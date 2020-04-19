@@ -40,10 +40,10 @@ defmodule BankApi.Router do
   end
 
   @doc """
-    Ping route to check service status
+    Home index route
   """
-  get "/ping" do
-    render_json(conn, %{message: "pong", status: 200})
+  get "/" do
+    render_json(conn, %{message: "BankAPI V1 - Check docs to how to use"})
   end
 
   @doc """
@@ -60,11 +60,6 @@ defmodule BankApi.Router do
     Customer routes (only dev)
   """
   forward("/api/customers", to: Customer)
-
-  @doc """
-    Home routes
-  """
-  forward("/", to: Home)
 
   @doc """
     Default route to page not found

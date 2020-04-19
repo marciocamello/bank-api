@@ -3,6 +3,6 @@ defmodule BankApiTest do
   doctest BankApi
 
   test "greets the world" do
-    assert BankApi.hello() == :world
+    assert 1+1 == 2
   end
 end
