@@ -14,7 +14,7 @@ config :bank_api, BankApi.Repo,
 config :bank_api, ecto_repos: [BankApi.Repo]
 
 # cowboy config
-config :bank_api, cowboy_port: 443
+config :bank_api, cowboy_port: System.get_env("PORT")
 
 # Configures Elixir's Logger
 config :logger, :console,
