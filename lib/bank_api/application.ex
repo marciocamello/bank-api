@@ -10,7 +10,7 @@ defmodule BankApi.Application do
     children = [
       # Starts a worker by calling: BankApi.Worker.start_link(arg)
       BankApi.Repo,
-      {Plug.Cowboy, scheme: :http, plug: BankApi.Router, options: [port: System.get_env("PORT")]}
+      {Plug.Cowboy, scheme: :http, plug: BankApi.Router, options: [port: cowboy_port()]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
