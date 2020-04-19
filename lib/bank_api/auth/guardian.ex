@@ -14,12 +14,12 @@ defmodule BankApi.Auth.Guardian do
   
     def resource_from_claims(claims) do
       id = claims["sub"]
-      resource = Customers.get_customer(id)
-      {:ok,  resource}
-    end
-
-    def resource_from_claims(_claims) do
-      {:error, :reason_for_error}
+      case Customers.get_customer(id) do
+        nil ->
+          {:error, :reason_for_error}
+        resource ->
+          {:ok, resource}
+      end
     end
 
     def authenticate(email, password) do
@@ -40,5 +40,15 @@ defmodule BankApi.Auth.Guardian do
     defp create_token(customer) do
       {:ok, token, _claims} = encode_and_sign(customer)
       {:ok, customer, token}
+    end
+
+    def terminate_account(token) do
+      {:ok, %{"id" => id}} = decode_and_verify(token)
+      case Customers.get_customer(id) do
+        nil ->
+          IO.puts "Error"
+        customer ->
+          Customers.delete_customer(customer)
+      end
     end
   end

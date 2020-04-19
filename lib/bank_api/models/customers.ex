@@ -2,6 +2,7 @@ defmodule BankApi.Models.Customers do
   import Ecto.Query, warn: false
   alias BankApi.Repo
   alias BankApi.Schemas.Customer
+  alias BankApi.Router
 
   def list_customers do
     Repo.all(Customer)
@@ -35,8 +36,8 @@ defmodule BankApi.Models.Customers do
     case Repo.get_by(Customer, email: email) do
       nil ->
         {:error, :not_found}
-      user ->
-        {:ok, user}
+      customer ->
+        {:ok, customer}
     end
   end
 end

@@ -1,18 +1,16 @@
 defmodule BankApi.Controllers.Auth do
     @moduledoc false
     use Plug.Router
-    alias BankApi.Router
-    alias BankApi.Helpers.TranslateError
-    alias BankApi.Models.Customers
     alias BankApi.Auth.Guardian
+    alias BankApi.Router
 
     plug(:match)
     plug(:dispatch)
   
     @doc """
-    Get Access Token
+    User login and get access token
     """
-    post "/" do
+    post "/login" do
         %{"email" => email, "password" => password} = conn.body_params
 
         case Guardian.authenticate(email, password) do

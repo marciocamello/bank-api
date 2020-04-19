@@ -4,7 +4,7 @@ defmodule BankApi.Router do
   use Plug.Router
   alias BankApi.Plugs.VerifyRequest
   alias BankApi.Plugs.{RequireAuth}
-  alias BankApi.Controllers.{Auth, Home, Customer}
+  alias BankApi.Controllers.{Auth, Home, Customer, User}
 
   plug(:match)
 
@@ -16,13 +16,27 @@ defmodule BankApi.Router do
 
   plug(:dispatch)
 
-
   @doc """
   Render parser to request data from route
   """
   def render_json(%{status: status} = conn, data) do
     body = Jason.encode!(data)
     send_resp(conn, status || 200, body)
+  end
+
+  @doc """
+  Render parser to request data from route
+  """
+  def get_header(%{req_headers: req_headers} = conn, key) do
+    get_req_header(conn, key)
+  end
+
+  @doc """
+  Render parser to request data from route
+  """
+  def get_bearer_token(conn) do
+    [bearer] = get_header(conn, "authorization")
+    String.replace(bearer, "Bearer ", "")
   end
 
   @doc """
@@ -33,9 +47,12 @@ defmodule BankApi.Router do
   end
 
   # Auth routes
-  forward "/api/login", to: Auth
+  forward "/api/auth", to: Auth
 
-  # Customer routes
+  # User routes
+  forward "/api/user", to: User
+
+  # Customer routes (only dev)
   forward "/api/customers", to: Customer
 
   # Home routes

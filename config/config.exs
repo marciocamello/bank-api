@@ -18,5 +18,6 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :bank_api, BankApi.Auth.Guardian,
+  error_handler: BankApi.Auth.ErrorHandler,
   issuer: "bank_api",
   secret_key: "pSk7JYofPSxwMP0RZNNLccu2+DPJtHQLcIiK2Qk4RCK++imQoFAJTLz2WE0GpeJI"
