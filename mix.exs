@@ -3,6 +3,7 @@ defmodule BankApi.MixProject do
 
   def project do
     [
+      # Application
       app: :bank_api,
       version: "0.1.0",
       elixir: "~> 1.10",
@@ -10,6 +11,7 @@ defmodule BankApi.MixProject do
         "Financial application, create customers and accounts, and operations financials.",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      aliases: aliases(),
 
       # Docs
       name: "BankApi",
@@ -20,15 +22,14 @@ defmodule BankApi.MixProject do
         main: "readme",
         logo: "logo.png",
         extras: ["README.md"]
-      ],
-      aliases: aliases()
+      ]
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :plug_cowboy],
+      extra_applications: [:logger, :plug_cowboy, :runtime_tools],
       mod: {BankApi.Application, []}
     ]
   end
