@@ -1,4 +1,4 @@
-import Config
+use Mix.Config
 
 # Environment message
 config :bank_api,
