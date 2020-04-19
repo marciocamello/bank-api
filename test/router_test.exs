@@ -6,17 +6,7 @@ defmodule BankApi.RouterTest do
 
   @opts Router.init([])
 
-  test "returns ping route" do
-    conn =
-      :get
-      |> conn("/ping", "")
-      |> Router.call(@opts)
-
-    assert conn.state == :sent
-    assert conn.status == 200
-  end
-
-  test "returns welcome" do
+  test "returns BankAPI V1 - Check docs to how to use" do
     conn =
       :get
       |> conn("/", "")
@@ -26,7 +16,7 @@ defmodule BankApi.RouterTest do
     assert conn.status == 200
   end
 
-  test "returns 404" do
+  test "returns Page not found" do
     conn =
       :get
       |> conn("/missing", "")

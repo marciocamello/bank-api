@@ -19,9 +19,9 @@ defmodule BankApi.Router do
   @doc """
     Render parser to request data from route
   """
-  def render_json(%{status: status} = conn, data) do
+  def render_json(conn, data, status \\ 200) do
     body = Jason.encode!(data)
-    send_resp(conn, status || 200, body)
+    send_resp(conn, status, body)
   end
 
   @doc """
@@ -65,6 +65,6 @@ defmodule BankApi.Router do
     Default route to page not found
   """
   match _ do
-    render_json(conn, %{message: "Page not found", status: 404})
+    render_json(conn, %{message: "Page not found"}, 404)
   end
 end
