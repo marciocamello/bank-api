@@ -23,5 +23,5 @@ defmodule BankApi.Application do
     Supervisor.start_link(children, opts)
   end
 
-  defp cowboy_port, do: Application.get_env(:bank_ai, :cowboy_port, 4000)
+  defp cowboy_port, do: Application.get_env(:bank_api, :cowboy_port, 4000)
 end
