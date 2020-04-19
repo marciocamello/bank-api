@@ -1,18 +1,6 @@
 defmodule BankApi do
   @moduledoc """
-  Documentation for `BankApi`.
+    This is BankApi module to financial concepts.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> BankApi.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  @moduledoc since: "1.0.0"
 end

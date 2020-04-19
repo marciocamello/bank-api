@@ -1,11 +1,15 @@
 defmodule BankApi.Schemas.Customer do
-  @moduledoc false
+  @moduledoc """
+    Customer scheme context
+  """
   use Ecto.Schema
   import Ecto.Changeset
 
   @derive {Jason.Encoder, only: [:id, :firstName, :lastName, :email, :phone]}
 
-  @doc false
+  @doc """
+    Table schema
+  """
   schema "customers" do
     field(:firstName, :string)
     field(:lastName, :string)
@@ -16,7 +20,14 @@ defmodule BankApi.Schemas.Customer do
     timestamps()
   end
 
-  @doc false
+  @doc """
+    Changeset implements 
+    Validate required fields
+    Validate email format
+    Validate unique email
+    Validate password length min 6
+    Create password hash
+  """
   def changeset(struct, params) do
     struct
     |> cast(params, [:firstName, :lastName, :email, :password, :phone])
@@ -27,7 +38,9 @@ defmodule BankApi.Schemas.Customer do
     |> put_password_hash()
   end
 
-  @doc false
+  @doc """
+    Encrypt password
+  """
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->

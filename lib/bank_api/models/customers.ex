@@ -36,6 +36,7 @@ defmodule BankApi.Models.Customers do
     case Repo.get_by(Customer, email: email) do
       nil ->
         {:error, :not_found}
+
       customer ->
         {:ok, customer}
     end

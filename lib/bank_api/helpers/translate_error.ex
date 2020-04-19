@@ -1,6 +1,10 @@
 defmodule BankApi.Helpers.TranslateError do
   @moduledoc """
-  Provides helper functions
+    Provides helper functions
+  """
+
+  @doc """
+    Transform _changeset errors to pretty list
   """
   def pretty_errors(_changeset) do
     Ecto.Changeset.traverse_errors(_changeset, fn {msg, opts} ->
