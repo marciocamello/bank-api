@@ -18,6 +18,7 @@ defmodule BankApi.Application do
     opts = [strategy: :one_for_one, name: BankApi.Supervisor]
 
     Logger.info("Starting application...")
+    Logger.info(Application.get_env(:bank_api, :message))
 
     Supervisor.start_link(children, opts)
   end

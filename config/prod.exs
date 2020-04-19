@@ -2,25 +2,19 @@ import Config
 
 # Environment message
 config :bank_api,
-  message: "Test"
+  message: "Production"
 
 # BankApi repo
 config :bank_api, BankApi.Repo,
-  database: "bank_api_test",
+  database: "bank_api_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  hostname: "localhost"
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 
 # cowboy config
-config :bank_api, cowboy_port: 4002
-
-# Print only warnings and errors during test
-config :logger, level: :warn
-
-config :bcrypt_elixir, log_rounds: 4
+config :bank_api, cowboy_port: 4000
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -20,7 +20,8 @@ defmodule BankApi.MixProject do
         main: "readme",
         logo: "logo.png",
         extras: ["README.md"]
-      ]
+      ],
+      aliases: aliases()
     ]
   end
 
@@ -45,6 +46,18 @@ defmodule BankApi.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
       {:guardian, "~> 2.0"}
+    ]
+  end
+
+  # Aliases are shortcuts or tasks specific to the current project.
+  # For example, to create, migrate and run the seeds file at once:
+  #
+  #     $ mix ecto.setup
+  #
+  # See the documentation for `Mix` for more info on aliases.
+  defp aliases do
+    [
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
