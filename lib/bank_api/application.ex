@@ -23,12 +23,15 @@ defmodule BankApi.Application do
     Supervisor.start_link(children, opts)
   end
 
-  defp cowboy_port() do
-    port_env_variable = System.get_env("PORT")
-    if is_nil(port_env_variable) do
-      4000
+  @doc """
+    Get cowboy port usin Mix.env and transform to integer
+  """
+  defp cowboy_port do
+    port = Application.get_env(:bank_api, :cowboy_port, 4000)
+    if is_bitstring(port) do
+      String.to_integer(port)
     else
-      String.to_integer(port_env_variable)
+      port
     end
   end
 end
