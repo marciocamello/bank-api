@@ -9,7 +9,8 @@ defmodule BankApi.MixProject do
       elixir: "~> 1.10",
       description:
         "Financial application, create customers and accounts, and operations financials.",
-      start_permanent: Mix.env() == :prod,
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
       deps: deps(),
       aliases: aliases(),
 
