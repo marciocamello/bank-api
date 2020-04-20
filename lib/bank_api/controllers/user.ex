@@ -38,4 +38,11 @@ defmodule BankApi.Controllers.User do
       Router.render_json(conn, %{errors: "You need authenticated to this action"})
     end
   end
+
+  @doc """
+    Default route to page not found
+  """
+  match _ do
+    Router.render_json(conn, %{message: "Page not found"}, 404)
+  end
 end
