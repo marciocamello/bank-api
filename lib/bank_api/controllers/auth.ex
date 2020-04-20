@@ -3,6 +3,7 @@ defmodule BankApi.Controllers.Auth do
     Auth Controller context
   """
   use Plug.Router
+  alias BankApi.Repo
   alias BankApi.Auth.Guardian
   alias BankApi.Router
 
@@ -21,6 +22,9 @@ defmodule BankApi.Controllers.Auth do
 
       {:error, :unauthorized} ->
         Router.render_json(conn, %{errors: "Invalid credentials"})
+
+      {:error, :not_found} ->
+        Router.render_json(conn, %{errors: "Invalid credentials"})        
     end
   end
 

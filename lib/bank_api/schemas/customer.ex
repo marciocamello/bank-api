@@ -5,7 +5,7 @@ defmodule BankApi.Schemas.Customer do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:firstName, :lastName, :email, :phone, :accounts]}
+  @derive {Jason.Encoder, only: [:id, :firstName, :lastName, :email, :phone, :accounts]}
 
   @doc """
     Table schema

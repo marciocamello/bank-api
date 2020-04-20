@@ -4,6 +4,7 @@ defmodule BankApi.Auth.Guardian do
   """
   use Guardian, otp_app: :bank_api
 
+  alias BankApi.Repo
   alias BankApi.Models.Customers
 
   @doc """
@@ -70,7 +71,7 @@ defmodule BankApi.Auth.Guardian do
     Create JWT token from Guardin encode and sign
   """
   defp create_token(customer) do
-    {:ok, token, _claims} = encode_and_sign(customer)
+    {:ok, token, _claims} = encode_and_sign(customer, %{"id" => customer.id})
     {:ok, customer, token}
   end
 
