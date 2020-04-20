@@ -3,6 +3,7 @@ defmodule BankApi.Controllers.Customer do
     Customer Controller context
   """
   use Plug.Router
+  alias BankApi.Repo
   alias BankApi.Helpers.TranslateError
   alias BankApi.Models.Customers
   alias BankApi.Router
@@ -16,8 +17,8 @@ defmodule BankApi.Controllers.Customer do
   """
   get "/" do
     customers = Customers.list_customers()
-
-    Router.render_json(conn, %{message: "Customer liested with success!", customers: customers})
+      |> Repo.preload(:accounts)
+    Router.render_json(conn, %{message: "Customer listed with success!", customers: customers})
   end
 
   @doc """
@@ -28,6 +29,7 @@ defmodule BankApi.Controllers.Customer do
 
     case Customers.create_customer(customer) do
       {:ok, _customer} ->
+        Customers.bind_account(_customer)
         Router.render_json(conn, %{message: "Customer created with success!", customer: _customer})
 
       {:error, _changeset} ->

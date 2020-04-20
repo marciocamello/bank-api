@@ -14,4 +14,8 @@ defmodule BankApi.Repo.Migrations.CreateCustomers do
 
     create unique_index(:customers, [:email])
   end
+
+  def down do
+    drop table("customers")
+  end
 end

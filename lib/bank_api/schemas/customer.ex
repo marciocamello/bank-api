@@ -5,7 +5,7 @@ defmodule BankApi.Schemas.Customer do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :firstName, :lastName, :email, :phone]}
+  @derive {Jason.Encoder, only: [:firstName, :lastName, :email, :phone, :accounts]}
 
   @doc """
     Table schema
@@ -16,6 +16,7 @@ defmodule BankApi.Schemas.Customer do
     field(:email, :string)
     field(:password, :string)
     field(:phone, :string)
+    has_one :accounts, BankApi.Schemas.Account
 
     timestamps()
   end
