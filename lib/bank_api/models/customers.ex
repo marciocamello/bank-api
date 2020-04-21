@@ -114,7 +114,7 @@ defmodule BankApi.Models.Customers do
   """
   def login(email, password) do
     Repo.get_by(Customer, email: email)
-    |> Repo.preload(:accounts)
+    |> Repo.preload(accounts: [:customer])
   end
 
   @doc """
@@ -145,7 +145,7 @@ defmodule BankApi.Models.Customers do
 
       customer ->
         customer = customer
-          |> Repo.preload(:accounts)
+        |> Repo.preload(accounts: [:customer])
         {:ok, customer}
     end
   end

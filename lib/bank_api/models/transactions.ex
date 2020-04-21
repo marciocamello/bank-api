@@ -7,6 +7,7 @@ defmodule BankApi.Models.Transactions do
   alias BankApi.Schemas.Transaction
   alias BankApi.Models.Customers
   alias BankApi.Models.Accounts
+  alias BankApi.Auth.Guardian
 
   @doc """
     Withdrawal money from customer account
@@ -26,9 +27,19 @@ defmodule BankApi.Models.Transactions do
 
     case update_balance(customer.accounts.balance, value) do
       {:ok, new_balance} ->
-        case Accounts.update_account(customer.accounts, %{"balance" => new_balance}) do
-          {:ok, account} ->
-            {:ok, account}
+        case password_confirmation(customer, password_confirm) do
+          {:error, :unauthorized} -> {:error, :unauthorized}
+          {:info, :wait_confirmation} ->
+            {:info, _account} = Accounts.update_balance(
+              customer.accounts,
+              %{"balance" => new_balance
+            })
+          {:ok, :confirmed} ->
+            {:ok, account} = Accounts.update_balance(
+              customer.accounts,
+              %{"balance" => new_balance},
+              true
+            )
         end
       {:error, :not_funds} ->
         {:error, :not_funds}
@@ -43,24 +54,53 @@ defmodule BankApi.Models.Transactions do
       iex> alias BankApi.Models.Transactions
   """
   def transfer(params) do
-    %{"account_from" => account_from, "account_to" => account_to, "value" => value} = params
+    %{
+      "customer" => customer,
+      "account_to" => account_to,
+      "value" => value,
+      "password_confirm" => password_confirm
+    } = params
+
     with {:ok, account_to} <- Customers.get_by_email(account_to) do
-      account = %{"account_from" => account_from, "account_to" => account_to}
-      {:ok, account}
+      case update_balance(customer.accounts.balance, account_to.accounts.balance, value) do
+        {:ok, new_balance} ->
+          %{"new_from_balance" => new_from_balance, "new_to_balance" => new_to_balance} = new_balance
+          case password_confirmation(customer, password_confirm) do
+            {:error, :unauthorized} -> {:error, :unauthorized}
+            {:info, :wait_confirmation} ->
+              {:info, _account} = Accounts.update_balance(
+                customer.accounts,
+                account_to.accounts,
+                %{"balance" => new_from_balance},
+                %{"balance" => new_to_balance}
+              )
+            {:ok, :confirmed} ->
+              {:ok, account} = Accounts.update_balance(
+                customer.accounts,
+                account_to.accounts,
+                %{"balance" => new_from_balance},
+                %{"balance" => new_to_balance},
+                true
+              )
+          end
+        {:error, :not_funds} ->
+          {:error, :not_funds}
+      end
     end
   end
 
   @doc false
-  defp password_confirmation(customer, password_confirm) do
-    case password_confirm do
-      false -> {:info, :wait_confirmation}
-      true -> {:ok, :confirmed}
+  def password_confirmation(customer, password_confirm \\ false) do
+    if password_confirm do
+      case Guardian.validate_password(password_confirm, customer.password) do
+        true ->
+          {:ok, :confirmed}
+        false ->
+          {:error, :unauthorized}
+      end
+    else
+      {:info, :wait_confirmation}
     end
-  end
-
-  @doc false
-  defp preview_updated_account(customer, new_balance) do
-    {:info, %{}} = Map.update(customer.accounts, "balance", new_balance, &(&1 * 2))
   end
 
   @doc false
@@ -73,6 +113,25 @@ defmodule BankApi.Models.Transactions do
         {:error, :not_funds}
       false ->
         {:ok, new_balance}
+    end
+  end
+
+  @doc false
+  defp update_balance(from_balance, to_balance, value) do
+    new_from_balance = from_balance
+      |> Decimal.sub(Decimal.from_float(value))
+
+    new_to_balance = to_balance
+      |> Decimal.add(Decimal.from_float(value))
+
+    case Decimal.negative?(new_from_balance) do
+      true ->
+        {:error, :not_funds}
+      false ->
+        {:ok, %{
+          "new_from_balance" => new_from_balance,
+          "new_to_balance" => new_to_balance
+        }}
     end
   end
 end

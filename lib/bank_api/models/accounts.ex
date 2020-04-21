@@ -7,12 +7,12 @@ defmodule BankApi.Models.Accounts do
   alias BankApi.Schemas.Account
 
   @doc """
-    Update account
+    Update current account balance
 
   # Examples
       iex> alias BankApi.Models.Accounts
   """
-  def update_account(%Account{} = account, attrs, apply \\ false) do
+  def update_balance(%Account{} = account, attrs, apply \\ false) do
     case apply do
       true ->
         account
@@ -21,7 +21,49 @@ defmodule BankApi.Models.Accounts do
       false ->
         account = account
         |> Account.changeset(attrs)
-        {:ok, account.data}
+        {:info, %{
+          email: account.data.customer.email,
+          old_balance: account.data.balance,
+          new_balance: account.changes.balance,
+        }}
+    end
+  end
+
+  @doc """
+    Update transfer operation to customer account
+
+  # Examples
+      iex> alias BankApi.Models.Accounts
+  """
+  def update_balance(%Account{} = from, %Account{} = to, from_attrs, to_attrs, apply \\ false) do
+    case apply do
+      true ->
+        from
+        |> Account.changeset(from_attrs)
+        |> Repo.update()
+
+        to
+        |> Account.changeset(to_attrs)
+        |> Repo.update()
+      false ->
+        from = from
+        |> Account.changeset(from_attrs)
+
+        to = to
+        |> Account.changeset(to_attrs)
+
+        {:info, %{
+          from: %{
+            email: from.data.customer.email,
+            old_balance: from.data.balance,
+            new_balance: from.changes.balance,
+          },
+          to: %{
+            email: to.data.customer.email,
+            old_balance: to.data.balance,
+            new_balance: to.changes.balance,
+          }
+        }}
     end
   end
 end

@@ -63,7 +63,7 @@ defmodule BankApi.Auth.Guardian do
   @doc """
     Validate password encrypted to database hash
   """
-  defp validate_password(password, encrypted_password) do
+  def validate_password(password, encrypted_password) do
     Bcrypt.verify_pass(password, encrypted_password)
   end
 
