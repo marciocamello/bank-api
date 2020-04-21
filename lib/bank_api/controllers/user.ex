@@ -6,6 +6,7 @@ defmodule BankApi.Controllers.User do
   alias BankApi.Repo
   alias BankApi.Helpers.TranslateError
   alias BankApi.Models.Customers
+  alias BankApi.Models.Transactions
   alias BankApi.Router
   alias BankApi.Auth.Guardian
 
@@ -39,6 +40,59 @@ defmodule BankApi.Controllers.User do
       Router.render_json(conn, %{message: "Your account has been terminated"})
     else
       Router.render_json(conn, %{errors: "You need authenticated to this action"})
+    end
+  end
+
+  @doc """
+    Register a new customer account
+  """
+  post "/withdrawal" do
+    token = Router.get_bearer_token(conn)
+    {:ok, customer} = Guardian.get_use_by_token(token)
+    params = conn.body_params
+      |> Map.put("customer", customer)
+      |> Map.put("password_confirm", false)
+
+    case Transactions.withdrawal(params) do
+      {:error, :not_found} ->
+        Router.render_json(conn, %{errors: "Invalid account data"})
+      
+      {:error, :not_funds} ->
+        Router.render_json(conn, %{errors: "You don't have enough funds"})
+      
+      {:error, _changeset} ->
+        Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
+      
+      {:info, :wait_confirmation} ->
+        Router.render_json(conn, %{message: "Password confirmation is wrong, try again"})
+          
+      {:ok, _result} ->
+        Router.render_json(conn, %{message: "Successful withdrawal!", result: _result})
+    end
+  end
+
+  @doc """
+    Register a new customer account
+  """
+  post "/transfer" do
+    token = Router.get_bearer_token(conn)
+    {:ok, customer} = Guardian.get_use_by_token(token)
+    params = conn.body_params
+      |> Map.put("account_from", customer)
+      |> Map.put("password_confirm", false)
+
+    case Transactions.transfer(params) do
+      {:error, :not_found} ->
+        Router.render_json(conn, %{errors: "Invalid account data"})
+      
+      {:info, :wait_confirmation} ->
+        Router.render_json(conn, %{message: "Password confirmation is wrong, try again"})
+          
+      {:ok, _result} ->
+        Router.render_json(conn, %{message: "Successful transfer!", result: _result})
+
+      {:error, _changeset} ->
+        Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
     end
   end
 

@@ -118,6 +118,17 @@ defmodule BankApi.Models.Customers do
   end
 
   @doc """
+    Get user authenticated from token
+
+  # Examples
+      iex> alias BankApi.Models.Customers
+  """
+  def get_user_authenticated(id) do
+    #{:ok, %{"id" => id}} = decode_and_verify(token)
+    {:ok, customer } = Customers.get_customer(id)
+  end
+
+  @doc """
     Get customer from email
 
   # Examples
