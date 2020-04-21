@@ -52,6 +52,13 @@ defmodule BankApi.Models.Transactions do
 
   # Examples
       iex> alias BankApi.Models.Transactions
+      iex> alias BankApi.Models.Customers
+      iex> params = %{"account" => "teste@email.com", "value" => 100.00}
+      iex> {:ok, customer} = Customers.get_by_email(account)
+      iex> params = conn.body_params
+        |> Map.put("customer", customer)
+      iex> Transactions.transfer(params)
+      {:ok, %BankApi.Schemas.Account{}}
   """
   def transfer(params) do
     %{

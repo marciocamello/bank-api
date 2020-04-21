@@ -69,7 +69,10 @@ defmodule BankApi.Controllers.User do
         Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
           
       {:ok, _result} ->
-        Router.render_json(conn, %{message: "Successful withdrawal!", result: _result})
+        Router.render_json(conn, %{message: "Successful withdrawal!", result: %{
+          "email" => _result.customer.email,
+          "new_balance" => _result.balance
+        }})
     end
   end
 
@@ -102,7 +105,10 @@ defmodule BankApi.Controllers.User do
         Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
           
       {:ok, _result} ->
-        Router.render_json(conn, %{message: "Successful transfer!", result: _result})
+        Router.render_json(conn, %{message: "Successful transfer!", result: %{
+          "email" => _result.customer.email,
+          "new_balance" => _result.balance
+        }})
     end
   end
 
