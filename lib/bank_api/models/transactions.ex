@@ -25,24 +25,31 @@ defmodule BankApi.Models.Transactions do
       "password_confirm" => password_confirm
     } = params
 
-    case update_balance(customer.accounts.balance, value) do
-      {:ok, new_balance} ->
-        case password_confirmation(customer, password_confirm) do
-          {:error, :unauthorized} -> {:error, :unauthorized}
-          {:info, :wait_confirmation} ->
-            {:info, _account} = Accounts.update_balance(
-              customer.accounts,
-              %{"balance" => new_balance
-            })
-          {:ok, :confirmed} ->
-            {:ok, account} = Accounts.update_balance(
-              customer.accounts,
-              %{"balance" => new_balance},
-              true
-            )
-        end
-      {:error, :not_funds} ->
-        {:error, :not_funds}
+    # check value is less then 0.00
+    with {:ok, value} <- check_value(value) do
+
+      # udate balance from accounts and a request value
+      case update_balance(customer.accounts.balance, value) do
+        {:ok, new_balance} ->
+
+          # check password confirmation before finish operation
+          case password_confirmation(customer, password_confirm) do
+            {:error, :unauthorized} -> {:error, :unauthorized}
+            {:info, :wait_confirmation} ->
+              {:info, _account} = Accounts.update_balance(
+                customer.accounts,
+                %{"balance" => new_balance
+              })
+            {:ok, :confirmed} ->
+              {:ok, account} = Accounts.update_balance(
+                customer.accounts,
+                %{"balance" => new_balance},
+                true
+              )
+          end
+        {:error, :not_funds} ->
+          {:error, :not_funds}
+      end
     end
   end
 
@@ -68,36 +75,57 @@ defmodule BankApi.Models.Transactions do
       "password_confirm" => password_confirm
     } = params
 
-    with {:ok, account_to} <- Customers.get_by_email(account_to) do
-      case update_balance(customer.accounts.balance, account_to.accounts.balance, value) do
-        {:ok, new_balance} ->
-          %{"new_from_balance" => new_from_balance, "new_to_balance" => new_to_balance} = new_balance
-          case password_confirmation(customer, password_confirm) do
-            {:error, :unauthorized} -> {:error, :unauthorized}
-            {:info, :wait_confirmation} ->
-              {:info, _account} = Accounts.update_balance(
-                customer.accounts,
-                account_to.accounts,
-                %{"balance" => new_from_balance},
-                %{"balance" => new_to_balance}
-              )
-            {:ok, :confirmed} ->
-              {:ok, account} = Accounts.update_balance(
-                customer.accounts,
-                account_to.accounts,
-                %{"balance" => new_from_balance},
-                %{"balance" => new_to_balance},
-                true
-              )
-          end
-        {:error, :not_funds} ->
-          {:error, :not_funds}
+    # check value is less then 0.00
+    with {:ok, value} <- check_value(value) do
+
+      # check account to transfer by email
+      with {:ok, account_to} <- Customers.get_by_email(account_to) do
+        
+        # udate balance from accounts and a request value and to request
+        case update_balance(customer.accounts.balance, account_to.accounts.balance, value) do
+          {:ok, new_balance} ->
+
+            # get balance from sender and balance from receiver accounts
+            %{"new_from_balance" => new_from_balance, "new_to_balance" => new_to_balance} = new_balance
+
+            # check password confirmation before finish operation
+            case password_confirmation(customer, password_confirm) do
+              {:error, :unauthorized} -> {:error, :unauthorized}
+              {:info, :wait_confirmation} ->
+                {:info, _account} = Accounts.update_balance(
+                  customer.accounts,
+                  account_to.accounts,
+                  %{"balance" => new_from_balance},
+                  %{"balance" => new_to_balance}
+                )
+              {:ok, :confirmed} ->
+                {:ok, account} = Accounts.update_balance(
+                  customer.accounts,
+                  account_to.accounts,
+                  %{"balance" => new_from_balance},
+                  %{"balance" => new_to_balance},
+                  true
+                )
+            end
+          {:error, :not_funds} ->
+            {:error, :not_funds}
+        end
       end
     end
   end
 
   @doc false
-  def password_confirmation(customer, password_confirm \\ false) do
+  defp check_value(value) do
+    case Decimal.equal?(Decimal.from_float(value), 0) do
+      true ->
+        {:error, :zero_value}
+      false ->
+        {:ok, value}
+    end
+  end
+
+  @doc false
+  defp password_confirmation(customer, password_confirm \\ false) do
     if password_confirm do
       case Guardian.validate_password(password_confirm, customer.password) do
         true ->
@@ -112,8 +140,7 @@ defmodule BankApi.Models.Transactions do
 
   @doc false
   defp update_balance(balance, value) do
-    new_balance = balance
-      |> Decimal.sub(Decimal.from_float(value))
+    new_balance = sub_balance(balance, value)
 
     case Decimal.negative?(new_balance) do
       true ->
@@ -125,11 +152,8 @@ defmodule BankApi.Models.Transactions do
 
   @doc false
   defp update_balance(from_balance, to_balance, value) do
-    new_from_balance = from_balance
-      |> Decimal.sub(Decimal.from_float(value))
-
-    new_to_balance = to_balance
-      |> Decimal.add(Decimal.from_float(value))
+    new_from_balance = sub_balance(from_balance, value)
+    new_to_balance = add_balance(to_balance, value)
 
     case Decimal.negative?(new_from_balance) do
       true ->
@@ -140,5 +164,17 @@ defmodule BankApi.Models.Transactions do
           "new_to_balance" => new_to_balance
         }}
     end
+  end
+
+  @doc false
+  defp add_balance(balance, value) do
+    balance
+      |> Decimal.add(Decimal.from_float(value))
+  end
+
+  @doc false
+  defp sub_balance(balance, value) do
+    balance
+      |> Decimal.sub(Decimal.from_float(value))
   end
 end

@@ -53,6 +53,9 @@ defmodule BankApi.Controllers.User do
       |> Map.put("customer", customer)
 
     case Transactions.withdrawal(params) do
+      {:error, :zero_value} ->
+        Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
+        
       {:error, :unauthorized} ->
         Router.render_json(conn, %{errors: "Invalid credentials"})
 
@@ -64,9 +67,6 @@ defmodule BankApi.Controllers.User do
       
       {:info, _account} ->
         Router.render_json(conn, %{message: "Please check your transation", result: _account})
-      
-      {:error, _changeset} ->
-        Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
           
       {:ok, _result} ->
         Router.render_json(conn, %{message: "Successful withdrawal!", result: %{
@@ -86,6 +86,9 @@ defmodule BankApi.Controllers.User do
       |> Map.put("customer", customer)
 
     case Transactions.transfer(params) do
+      {:error, :zero_value} ->
+        Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
+
       {:error, :unauthorized} ->
         Router.render_json(conn, %{errors: "Invalid credentials"})
 
@@ -100,9 +103,6 @@ defmodule BankApi.Controllers.User do
 
       {:info, _account} ->
         Router.render_json(conn, %{message: "Please check your transation", result: _account})
-
-      {:error, _changeset} ->
-        Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
           
       {:ok, _result} ->
         Router.render_json(conn, %{message: "Successful transfer!", result: %{
