@@ -10,8 +10,10 @@ defmodule BankApi.MixProject do
       description:
         "Financial application, create customers and accounts, and operations financials.",
       build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
       deps: deps(),
       aliases: aliases(),
+      releases: releases(),
 
       # Docs
       name: "BankApi",
@@ -59,6 +61,17 @@ defmodule BankApi.MixProject do
   defp aliases do
     [
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
+  end
+
+  defp releases do
+    [
+      bank_api: [
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent],
+        quiet: true,
+        overwrite: true
+      ]
     ]
   end
 end

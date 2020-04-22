@@ -4,7 +4,9 @@ services:
   #APP
   app:
     container_name: bank-api
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     tty: true
     privileged: false
     environment:
@@ -12,7 +14,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
     volumes:
-      - .:/app
+      - /home/marcio/development/projects/Elixir/bank_api:/app
     ports:
       - "4000:4000"
     networks:
@@ -20,11 +22,10 @@ services:
 
   # POSTGRES DATABASE    
   postgres:
-    container_name: bank-db-api
+    container_name: bank-db
     image: postgres
     restart: always
     volumes:
-      - .:/app
       - "/home/marcio/development/bank-data:/var/lib/postgres"
     environment:
       POSTGRES_PASSWORD: postgres
@@ -36,6 +37,7 @@ services:
 
   # PGADMIN
   pgadmin:
+    container_name: bank-db-admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: "mac3designer@gmail.com"
