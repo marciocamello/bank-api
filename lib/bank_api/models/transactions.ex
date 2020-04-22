@@ -31,16 +31,16 @@ defmodule BankApi.Models.Transactions do
   """
   def filter_transactions(filter, type, period) do
 
-    query = filter_period(filter, period)
-    filtered_result(list_transactions(query))
+    query = filter_period(filter, period, type)
+    filtered_params(list_transactions(query))
   end
 
   @doc false
-  defp filter_period(filter, period) do
+  defp filter_period(filter, period, type) do
     %{"year" => year, "month" => month, "day" => day} = get_period(filter, period)
     %{"start_date" => start_date, "end_date" => end_date} = get_dates(filter, year, month, day)
 
-    query = from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date
+    filtered_query(type, start_date, end_date)
   end
 
   @doc false
@@ -77,9 +77,19 @@ defmodule BankApi.Models.Transactions do
   end
 
   @doc false
-  defp filtered_result(transactions) do
+  defp filtered_params(transactions) do
     total = get_total_transactions(transactions)
     %{"transactions" => transactions, "total" => total}
+  end
+
+  @doc false
+  defp filtered_query(type, start_date, end_date) do
+    case type do
+      "" ->
+        from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date
+      _ ->
+        from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date and t.type <= ^type
+    end
   end
 
   @doc """
