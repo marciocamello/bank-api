@@ -2,9 +2,6 @@ defmodule BankApi.Models.Transactions.Action do
   @moduledoc """
     Transactions actions
   """
-  import Ecto.Query, warn: false
-  alias BankApi.Repo
-  alias BankApi.Schemas.Transaction
   alias BankApi.Models.Transactions
   alias BankApi.Models.Customers
   alias BankApi.Models.Accounts

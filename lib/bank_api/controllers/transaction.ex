@@ -9,20 +9,27 @@ defmodule BankApi.Controllers.Transaction do
   alias BankApi.Router
 
   plug(:match)
+  plug(BankApi.Auth.Pipeline)
   plug(:dispatch)
 
   @doc """
     Show total transactions
   """
   post "/report" do
-    %{
-      "filter" => filter,
-      "type" => type,
-      "period" => period
-    } = conn.body_params
- 
-    result = Transactions.filter_transactions(filter, type, period)
-    Router.render_json(conn, %{message: "All transactions", result: result})
+    if Guardian.is_admin(conn) do
+
+      %{
+        "filter" => filter,
+        "type" => type,
+        "period" => period
+      } = conn.body_params
+  
+      result = Transactions.filter_transactions(filter, type, period)
+      Router.render_json(conn, %{message: "All transactions", result: result})
+    else
+
+      Router.render_json(conn, %{errors: "Unauthorized"})
+    end
   end
 
   @doc """

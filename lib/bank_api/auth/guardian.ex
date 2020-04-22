@@ -5,6 +5,7 @@ defmodule BankApi.Auth.Guardian do
   use Guardian, otp_app: :bank_api
 
   alias BankApi.Repo
+  alias BankApi.Router
   alias BankApi.Models.Customers
 
   @doc """
@@ -71,7 +72,7 @@ defmodule BankApi.Auth.Guardian do
     Create JWT token from Guardin encode and sign
   """
   defp create_token(customer) do
-    {:ok, token, _claims} = encode_and_sign(customer, %{"id" => customer.id})
+    {:ok, token, _claims} = encode_and_sign(customer, %{"id" => customer.id, "acl" => customer.acl})
     {:ok, customer, token}
   end
 
@@ -89,11 +90,27 @@ defmodule BankApi.Auth.Guardian do
   end
 
   @doc """
-    Terminar customer account and remove from database
+    Terminate customer account and remove from database
   """
   def terminate_account(token) do
     with {:ok, customer} <- get_use_by_token(token) do
       Customers.delete_customer(customer)
+    end
+  end
+
+  @doc """
+    Check if user is admin account
+  """
+  def is_admin(conn) do
+    token = Router.get_bearer_token(conn)
+    {:ok, claims} = decode_and_verify(token)
+    %{"acl" => acl} = claims
+
+    case acl do
+      "admin" ->
+        true
+      _ ->
+        false
     end
   end
 end

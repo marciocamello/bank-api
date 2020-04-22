@@ -4,6 +4,7 @@ defmodule BankApi.Controllers.Customer do
   """
   use Plug.Router
   alias BankApi.Repo
+  alias BankApi.Auth.Guardian
   alias BankApi.Helpers.TranslateError
   alias BankApi.Models.Customers
   alias BankApi.Router
@@ -16,24 +17,38 @@ defmodule BankApi.Controllers.Customer do
     Show account logged
   """
   get "/" do
-    customers = Customers.list_customers()
-      |> Repo.preload(:accounts)
-    Router.render_json(conn, %{message: "Customer listed with success!", customers: customers})
+    if Guardian.is_admin(conn) do
+
+      customers = Customers.list_customers()
+        |> Repo.preload(:accounts)
+        
+      Router.render_json(conn, %{message: "Customer listed with success!", customers: customers})
+    else
+
+      Router.render_json(conn, %{errors: "Unauthorized"})
+    end
   end
 
   @doc """
     Create account route
   """
   post "/" do
-    %{"customer" => customer} = conn.body_params
+    if Guardian.is_admin(conn) do
 
-    case Customers.create_customer(customer) do
-      {:ok, _customer} ->
-        Customers.bind_account(_customer)
-        Router.render_json(conn, %{message: "Customer created with success!", customer: _customer})
+      %{"customer" => customer} = conn.body_params
 
-      {:error, _changeset} ->
-        Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
+      case Customers.create_customer(customer) do
+        {:ok, _customer} ->
+          Customers.bind_account(_customer)
+          customer = Customers.get_customer(_customer.id)
+          Router.render_json(conn, %{message: "Customer created with success!", customer: customer})
+
+        {:error, _changeset} ->
+          Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
+      end
+    else
+
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
@@ -41,14 +56,20 @@ defmodule BankApi.Controllers.Customer do
     Show user logged by id
   """
   get "/:id" do
-    %{"id" => id} = conn.path_params
+    if Guardian.is_admin(conn) do
 
-    case Customers.get_customer(id) do
-      nil ->
-        Router.render_json(conn, %{errors: "This customer do not exist"})
+      %{"id" => id} = conn.path_params
 
-      customer ->
-        Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+      case Customers.get_customer(id) do
+        nil ->
+          Router.render_json(conn, %{errors: "This customer do not exist"})
+
+        customer ->
+          Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+      end
+    else
+
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
@@ -56,16 +77,22 @@ defmodule BankApi.Controllers.Customer do
     Update user logged by id
   """
   put "/:id" do
-    %{"id" => id} = conn.path_params
-    %{"customer" => params} = conn.body_params
+    if Guardian.is_admin(conn) do
 
-    case Customers.get_customer(id) do
-      nil ->
-        Router.render_json(conn, %{errors: "This customer do not exist"})
+      %{"id" => id} = conn.path_params
+      %{"customer" => params} = conn.body_params
 
-      customer ->
-        Customers.update_customer(customer, params)
-        Router.render_json(conn, %{message: "Customer updated with success!", customer: customer})
+      case Customers.get_customer(id) do
+        nil ->
+          Router.render_json(conn, %{errors: "This customer do not exist"})
+
+        customer ->
+          Customers.update_customer(customer, params)
+          Router.render_json(conn, %{message: "Customer updated with success!", customer: customer})
+      end
+    else
+
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
@@ -73,15 +100,21 @@ defmodule BankApi.Controllers.Customer do
     Delete user logged by id
   """
   delete "/:id" do
-    %{"id" => id} = conn.path_params
+    if Guardian.is_admin(conn) do
 
-    case Customers.get_customer(id) do
-      nil ->
-        Router.render_json(conn, %{errors: "This customer do not exist"})
+      %{"id" => id} = conn.path_params
 
-      customer ->
-        Customers.delete_customer(customer)
-        Router.render_json(conn, %{message: "Customer deleted with success!"})
+      case Customers.get_customer(id) do
+        nil ->
+          Router.render_json(conn, %{errors: "This customer do not exist"})
+
+        customer ->
+          Customers.delete_customer(customer)
+          Router.render_json(conn, %{message: "Customer deleted with success!"})
+      end
+    else
+
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 

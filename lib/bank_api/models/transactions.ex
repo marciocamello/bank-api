@@ -26,13 +26,18 @@ defmodule BankApi.Models.Transactions do
 
   # Examples
       iex> alias BankApi.Models.Transactions
-      iex> Transactions.filter_transactions
-      [ %BankApi.Schemas.Transaction{} ]
+      iex> %{"filter" => filter,"type" => type,"period" => period} = %{"filter" => "","type" => "","period" => ""}
+      iex> filter_transactions(filter, type, period)
+      %{
+        "total" => #Decimal<0.00>,
+        "transactions" => [%BankApi.Schemas.Transaction{}]
+      }
   """
   def filter_transactions(filter, type, period) do
-
     query = filter_period(filter, period, type)
-    filtered_params(list_transactions(query))
+    |> list_transactions
+ 
+    filtered_params(query)
   end
 
   @doc false
@@ -88,7 +93,7 @@ defmodule BankApi.Models.Transactions do
       "" ->
         from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date
       _ ->
-        from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date and t.type <= ^type
+        from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date and t.type == ^type
     end
   end
 
