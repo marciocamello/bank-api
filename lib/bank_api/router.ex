@@ -4,7 +4,7 @@ defmodule BankApi.Router do
   """
   use Plug.Router
   alias BankApi.Plugs.VerifyRequest
-  alias BankApi.Controllers.{Auth, Home, Customer, User}
+  alias BankApi.Controllers.{Auth, Home, Customer, User, Transaction}
 
   plug(:match)
 
@@ -55,6 +55,11 @@ defmodule BankApi.Router do
     User routes
   """
   forward("/api/user", to: User)
+
+  @doc """
+    Transaction routes
+  """
+  forward("/api/transactions", to: Transaction)
 
   @doc """
     Customer routes (only dev)

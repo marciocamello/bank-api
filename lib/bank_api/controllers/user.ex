@@ -52,7 +52,7 @@ defmodule BankApi.Controllers.User do
     params = conn.body_params
       |> Map.put("customer", customer)
 
-    case Transactions.withdrawal(params) do
+    case Transactions.Action.withdrawal(params) do
       {:error, :zero_value} ->
         Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
         
@@ -85,7 +85,7 @@ defmodule BankApi.Controllers.User do
     params = conn.body_params
       |> Map.put("customer", customer)
 
-    case Transactions.transfer(params) do
+    case Transactions.Action.transfer(params) do
       {:error, :zero_value} ->
         Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
 

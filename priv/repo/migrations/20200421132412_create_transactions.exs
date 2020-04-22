@@ -6,6 +6,7 @@ defmodule BankApi.Repo.Migrations.CreateTransactions do
       add :value, :decimal, precision: 10, scale: 2
       add :account_from, :string
       add :account_to, :string
+      add :type, :string
       
       timestamps()
     end

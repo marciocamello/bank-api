@@ -5,7 +5,7 @@ defmodule BankApi.Schemas.Transaction do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:account_from, :account_to, :value]}
+  @derive {Jason.Encoder, only: [:account_from, :account_to, :value, :inserted_at]}
 
   @doc """
     Table schema
@@ -14,6 +14,7 @@ defmodule BankApi.Schemas.Transaction do
     field(:value, :decimal)
     field(:account_from, :string)
     field(:account_to, :string)
+    field(:type, :string)
 
     timestamps()
   end
@@ -24,7 +25,7 @@ defmodule BankApi.Schemas.Transaction do
   """
   def changeset(struct, params) do
     struct
-    |> cast(params, [:account_from, :account_to, :value])
-    |> validate_required([:account_from, :account_to, :value])
+    |> cast(params, [:account_from, :account_to, :value, :type, :inserted_at])
+    |> validate_required([:account_from, :account_to, :value, :type])
   end
 end
