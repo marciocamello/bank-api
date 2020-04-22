@@ -51,14 +51,14 @@ defmodule BankApi.Models.Transactions do
     day = DateTime.utc_now.month
 
     case filter do
-      "all" ->
-        %{"year" => year, "month" => month, "day" => day}
       "daily" ->
         %{"year" => year, "month" => month, "day" => String.to_integer(period)}
       "monthly" ->
         %{"year" => year, "month" => String.to_integer(period), "day" => 01}
       "yearly" ->
         %{"year" => String.to_integer(period), "month" => month, "day" => 01}
+      _ ->
+        %{"year" => year, "month" => month, "day" => day}
     end
   end
 
