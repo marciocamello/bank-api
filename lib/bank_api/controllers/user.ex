@@ -14,6 +14,17 @@ defmodule BankApi.Controllers.User do
   plug(:dispatch)
 
   @doc """
+    shouw current account
+  """
+  get "/account" do
+    token = Router.get_bearer_token(conn)
+
+    with {:ok, customer} <- Guardian.get_use_by_token(token) do
+      Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+    end
+  end
+
+  @doc """
     Register a new customer account
   """
   post "/register" do
