@@ -64,6 +64,7 @@ defmodule BankApi.MixProject do
     ]
   end
 
+  # Releases are tasks to compile project
   defp releases do
     [
       bank_api: [
