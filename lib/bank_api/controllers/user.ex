@@ -14,7 +14,7 @@ defmodule BankApi.Controllers.User do
   plug(:dispatch)
 
   @doc """
-    shouw current account
+    show current account
   """
   get "/account" do
     token = Router.get_bearer_token(conn)
