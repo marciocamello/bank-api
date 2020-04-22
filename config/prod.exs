@@ -9,7 +9,8 @@ config :bank_api, BankApi.Repo,
   database: "d9of25tamfl64u",
   username: "evfcuapfqxggne",
   password: "2dcddc7954cf99f33aa80c1e28c435c91d04a0e0fc0b628518c84f1696f723b3",
-  hostname: "ec2-18-233-137-77.compute-1.amazonaws.com"
+  hostname: "ec2-18-233-137-77.compute-1.amazonaws.com",
+  ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 

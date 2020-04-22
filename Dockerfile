@@ -1,29 +1,29 @@
-FROM elixir:1.10-alpine AS builder
+# IMAGe
+FROM elixir:1.10
 
-WORKDIR     /opt/app
+# MAINTAINER
+LABEL Maintainer="Marcio Camello <mac3designer@gmail.com>" \
+      Description="BankAPI Elixir image with Phoenix Framework"
 
-RUN         apk add \
-              build-base && \
-              mix local.rebar --force && \
-              mix local.hex --force
+# ADDING DEPENDENCIES
+RUN apt-get update && apt-get install git inotify-tools make gcc libc-dev -y
 
-ADD         mix.exs mix.lock ./
-RUN         mix do deps.get --only prod, deps.compile
+# APPLICATION DIRECTORY
+RUN mkdir /app
+WORKDIR /app
 
-COPY        . ./
+# INSTALL MIX DEPENDENCIES
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
-RUN         MIX_ENV=prod mix release --path ../built
+# PORT
+ENV REPLACE_OS_VARS=true
+ENV HTTP_PORT=4000 BEAM_PORT=14000 ERL_EPMD_PORT=24000
+EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
 
+# CLEAR CACHE
+RUN rm -rf /var/cache/* \
+    && rm -rf /tmp/*
 
-FROM alpine:3.9
-
-RUN          apk add \
-              bash 
-
-WORKDIR      /opt/app/bin
-
-COPY         --from=builder /opt/built ../
-
-ENV          PATH="$PATH:$PWD"
-
-ENTRYPOINT   ["server", "start"]
+# START
+CMD [ "iex", "-S", "mix", "run", "--no-halt" ]
