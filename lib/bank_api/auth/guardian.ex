@@ -5,7 +5,6 @@ defmodule BankApi.Auth.Guardian do
   use Guardian, otp_app: :bank_api
 
   alias BankApi.Repo
-  alias BankApi.Router
   alias BankApi.Models.Customers
 
   @doc """
@@ -101,8 +100,7 @@ defmodule BankApi.Auth.Guardian do
   @doc """
     Check if user is admin account
   """
-  def is_admin(conn) do
-    token = Router.get_bearer_token(conn)
+  def is_admin(token) do
     {:ok, claims} = decode_and_verify(token)
     %{"acl" => acl} = claims
 

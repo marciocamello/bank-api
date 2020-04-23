@@ -16,7 +16,9 @@ defmodule BankApi.Controllers.Transaction do
     Show total transactions
   """
   post "/report" do
-    if Guardian.is_admin(conn) do
+
+    token = Router.get_bearer_token(conn)
+    if Guardian.is_admin(token) do
 
       %{
         "filter" => filter,
