@@ -79,7 +79,7 @@ defmodule BankApi.Auth.Guardian do
   @doc """
     Get user from token
   """
-  def get_use_by_token(token) do
+  def get_user_by_token(token) do
     {:ok, %{"id" => id}} = decode_and_verify(token)
     case Customers.get_customer(id) do
       nil ->
@@ -93,7 +93,7 @@ defmodule BankApi.Auth.Guardian do
     Terminate customer account and remove from database
   """
   def terminate_account(token) do
-    with {:ok, customer} <- get_use_by_token(token) do
+    with {:ok, customer} <- get_user_by_token(token) do
       Customers.delete_customer(customer)
     end
   end

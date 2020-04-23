@@ -6,11 +6,12 @@ config :bank_api,
 
 # BankApi repo
 config :bank_api, BankApi.Repo,
+  pool: Ecto.Adapters.SQL.Sandbox,
   database: "bank_api_test",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  size: 1
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 

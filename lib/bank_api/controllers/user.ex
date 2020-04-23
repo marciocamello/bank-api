@@ -14,17 +14,6 @@ defmodule BankApi.Controllers.User do
   plug(:dispatch)
 
   @doc """
-    show current account
-  """
-  get "/account" do
-    token = Router.get_bearer_token(conn)
-
-    with {:ok, customer} <- Guardian.get_use_by_token(token) do
-      Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
-    end
-  end
-
-  @doc """
     Register a new customer account
   """
   post "/register" do
@@ -42,24 +31,22 @@ defmodule BankApi.Controllers.User do
   end
 
   @doc """
-    Terminate customer account
+    show current account
   """
-  get "/terminate", assigns: %{an_option: :a_value} do
+  get "/account" do
     token = Router.get_bearer_token(conn)
 
-    if Guardian.terminate_account(token) do
-      Router.render_json(conn, %{message: "Your account has been terminated"})
-    else
-      Router.render_json(conn, %{errors: "You need authenticated to this action"})
+    with {:ok, customer} <- Guardian.get_user_by_token(token) do
+      Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
     end
   end
 
   @doc """
-    Register a new customer account
+    Withdrawal money from your account
   """
   post "/withdrawal" do
     token = Router.get_bearer_token(conn)
-    {:ok, customer} = Guardian.get_use_by_token(token)
+    {:ok, customer} = Guardian.get_user_by_token(token)
     params = conn.body_params
       |> Map.put("customer", customer)
 
@@ -88,11 +75,11 @@ defmodule BankApi.Controllers.User do
   end
 
   @doc """
-    Register a new customer account
+    Transfer money to other customer account
   """
   post "/transfer" do
     token = Router.get_bearer_token(conn)
-    {:ok, customer} = Guardian.get_use_by_token(token)
+    {:ok, customer} = Guardian.get_user_by_token(token)
     params = conn.body_params
       |> Map.put("customer", customer)
 
@@ -108,10 +95,7 @@ defmodule BankApi.Controllers.User do
       
       {:error, :not_funds} ->
         Router.render_json(conn, %{errors: "You don't have enough funds"})
-      
-      {:info, :wait_confirmation} ->
-        Router.render_json(conn, %{message: "Password confirmation is wrong, try again"})
-
+ 
       {:info, _account} ->
         Router.render_json(conn, %{message: "Please check your transation", result: _account})
           
@@ -120,6 +104,19 @@ defmodule BankApi.Controllers.User do
           "email" => _result.customer.email,
           "new_balance" => _result.balance
         }})
+    end
+  end
+
+  @doc """
+    Terminate customer account
+  """
+  get "/terminate", assigns: %{an_option: :a_value} do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.terminate_account(token) do
+      Router.render_json(conn, %{message: "Your account has been terminated"})
+    else
+      Router.render_json(conn, %{errors: "You need authenticated to this action"})
     end
   end
 

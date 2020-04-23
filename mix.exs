@@ -24,7 +24,11 @@ defmodule BankApi.MixProject do
         main: "readme",
         logo: "logo.png",
         extras: ["README.md"]
-      ]
+      ],
+
+      # Tests
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test]
     ]
   end
 
@@ -48,7 +52,8 @@ defmodule BankApi.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:bcrypt_elixir, "~> 2.0"},
       {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
-      {:guardian, "~> 2.0"}
+      {:guardian, "~> 2.0"},
+      {:excoveralls, "~> 0.4", only: :test}
     ]
   end
 
@@ -60,7 +65,9 @@ defmodule BankApi.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.reset", "ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 

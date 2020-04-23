@@ -6,6 +6,9 @@ defmodule BankApi.Application do
   use Application
   require Logger
 
+  @doc """
+    Start application
+  """
   def start(_type, _args) do
     children = [
       # Starts a worker by calling: BankApi.Worker.start_link(arg)
