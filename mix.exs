@@ -14,6 +14,7 @@ defmodule BankApi.MixProject do
       deps: deps(),
       aliases: aliases(),
       releases: releases(),
+      elixirc_paths: elixirc_paths(Mix.env()),
 
       # Docs
       name: "BankApi",
@@ -39,6 +40,10 @@ defmodule BankApi.MixProject do
       mod: {BankApi.Application, []}
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
