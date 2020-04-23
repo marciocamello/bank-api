@@ -7,7 +7,7 @@ defmodule BankApiWithDrawalTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(BankApi.Repo)
   end
 
-  # global fixtures
+  # globalfixtures
   use BankApi.Fixtures, [:customer]
 
   # withdrawal money from you user and check confirmation password
