@@ -6,6 +6,7 @@ defmodule BankApi.Auth.Guardian do
 
   alias BankApi.Repo
   alias BankApi.Models.Customers
+  alias BankApi.Schemas.Customer
 
   @doc """
     Callback implementation for Guardian.subject_for_token/2.
@@ -82,8 +83,20 @@ defmodule BankApi.Auth.Guardian do
   """
   def get_user_by_token(token) do
     case decode_and_verify(token) do
+      nil ->
+        {:error, :not_found}
+
       {:ok, %{"id" => id}} ->
-        {:ok, Customers.get_customer(id)}
+        case Customers.get_customer(id) do
+          nil ->
+            {:error, :not_found}
+
+          _customer ->
+            {:ok, _customer}
+        end
+
+      {:error, %CaseClauseError{term: {:error, {:case_clause, 34}}}} ->
+        {:error, :not_found}
 
       {:error, %ArgumentError{}} ->
         {:error, :not_found}
