@@ -14,6 +14,22 @@ defmodule BankApi.AppCase do
       alias BankApi.Schemas.Account
       alias BankApi.Auth.Guardian
       alias BankApi.Helpers.TranslateError
+
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query
+      import BankApi.AppCase
     end
+  end
+
+  # sandbox sql setup
+  setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BankApi.Repo)
+
+    unless tags[:async] do
+      Ecto.Adapters.SQL.Sandbox.mode(BankApi.Repo, {:shared, self()})
+    end
+
+    :ok
   end
 end

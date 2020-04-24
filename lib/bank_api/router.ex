@@ -3,8 +3,7 @@ defmodule BankApi.Router do
     BankApi router context
   """
   use Plug.Router
-  alias BankApi.Plugs.VerifyRequest
-  alias BankApi.Controllers.{Auth, Home, Customer, User, Transaction}
+  alias BankApi.Controllers.{Auth, Customer, User, Transaction}
 
   plug(:match)
 
@@ -24,10 +23,8 @@ defmodule BankApi.Router do
     send_resp(conn, status, body)
   end
 
-  @doc """
-    Render parser to request data from route
-  """
-  def get_header(%{req_headers: req_headers} = conn, key) do
+  @doc false
+  def get_header(conn, key) do
     get_req_header(conn, key)
   end
 
@@ -39,36 +36,24 @@ defmodule BankApi.Router do
     String.replace(bearer, "Bearer ", "")
   end
 
-  @doc """
-    Home index route
-  """
+  @doc false
   get "/" do
     render_json(conn, %{message: "BankAPI V1 - Check docs to how to use"})
   end
 
-  @doc """
-    Auth routes
-  """
+  @doc false
   forward("/api/auth", to: Auth)
 
-  @doc """
-    User routes
-  """
+  @doc false
   forward("/api/user", to: User)
 
-  @doc """
-    Transaction routes
-  """
+  @doc false
   forward("/api/transactions", to: Transaction)
 
-  @doc """
-    Customer routes (only dev)
-  """
+  @doc false
   forward("/api/customers", to: Customer)
 
-  @doc """
-    Default route to page not found
-  """
+  @doc false
   match _ do
     render_json(conn, %{message: "Page not found"}, 404)
   end

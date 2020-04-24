@@ -102,33 +102,6 @@ defmodule BankApi.Models.Customers do
   end
 
   @doc """
-    Login user with email and password
-
-  # Examples
-      iex> alias BankApi.Models.Customers
-      iex> Customers.login(
-          "email@email.com",
-          "123456"
-      )
-      %BankApi.Schemas.Customer{}
-  """
-  def login(email, password) do
-    Repo.get_by(Customer, email: email)
-    |> Repo.preload(accounts: [:customer])
-  end
-
-  @doc """
-    Get user authenticated from token
-
-  # Examples
-      iex> alias BankApi.Models.Customers
-  """
-  def get_user_authenticated(id) do
-    # {:ok, %{"id" => id}} = decode_and_verify(token)
-    {:ok, customer} = Customers.get_customer(id)
-  end
-
-  @doc """
     Get customer from email
 
   # Examples

@@ -11,7 +11,6 @@ defmodule BankApi.Auth.ErrorHandler do
   """
   @impl Guardian.Plug.ErrorHandler
   def auth_error(conn, {type, _reason}, _opts) do
-    body = Jason.encode!(%{message: "Unauthorized"})
-    send_resp(conn, 401, body)
+    send_resp(conn, 401, Jason.encode!(%{message: "Unauthorized"}))
   end
 end

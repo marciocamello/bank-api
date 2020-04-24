@@ -36,8 +36,12 @@ defmodule BankApi.Controllers.User do
   get "/account" do
     token = Router.get_bearer_token(conn)
 
-    with {:ok, customer} <- Guardian.get_user_by_token(token) do
-      Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+    case Guardian.get_user_by_token(token) do
+      {:ok, customer} ->
+        Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+
+      {:error, :not_found} ->
+        Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
@@ -46,36 +50,38 @@ defmodule BankApi.Controllers.User do
   """
   post "/withdrawal" do
     token = Router.get_bearer_token(conn)
-    {:ok, customer} = Guardian.get_user_by_token(token)
 
-    params =
-      conn.body_params
-      |> Map.put("customer", customer)
+    case Guardian.get_user_by_token(token) do
+      {:ok, customer} ->
+        params =
+          conn.body_params
+          |> Map.put("customer", customer)
 
-    case Transactions.Action.withdrawal(params) do
-      {:error, :zero_value} ->
-        Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
+        case Transactions.Action.withdrawal(params) do
+          {:error, :zero_value} ->
+            Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
 
-      {:error, :unauthorized} ->
-        Router.render_json(conn, %{errors: "Invalid credentials"})
+          {:error, :unauthorized} ->
+            Router.render_json(conn, %{errors: "Invalid credentials"})
+
+          {:error, :not_funds} ->
+            Router.render_json(conn, %{errors: "You don't have enough funds"})
+
+          {:info, _account} ->
+            Router.render_json(conn, %{message: "Please check your transation", result: _account})
+
+          {:ok, _result} ->
+            Router.render_json(conn, %{
+              message: "Successful withdrawal!",
+              result: %{
+                "email" => _result.customer.email,
+                "new_balance" => _result.balance
+              }
+            })
+        end
 
       {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "Invalid account data"})
-
-      {:error, :not_funds} ->
-        Router.render_json(conn, %{errors: "You don't have enough funds"})
-
-      {:info, _account} ->
-        Router.render_json(conn, %{message: "Please check your transation", result: _account})
-
-      {:ok, _result} ->
-        Router.render_json(conn, %{
-          message: "Successful withdrawal!",
-          result: %{
-            "email" => _result.customer.email,
-            "new_balance" => _result.balance
-          }
-        })
+        Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
@@ -84,36 +90,41 @@ defmodule BankApi.Controllers.User do
   """
   post "/transfer" do
     token = Router.get_bearer_token(conn)
-    {:ok, customer} = Guardian.get_user_by_token(token)
 
-    params =
-      conn.body_params
-      |> Map.put("customer", customer)
+    case Guardian.get_user_by_token(token) do
+      {:ok, customer} ->
+        params =
+          conn.body_params
+          |> Map.put("customer", customer)
 
-    case Transactions.Action.transfer(params) do
-      {:error, :zero_value} ->
-        Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
+        case Transactions.Action.transfer(params) do
+          {:error, :zero_value} ->
+            Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
 
-      {:error, :unauthorized} ->
-        Router.render_json(conn, %{errors: "Invalid credentials"})
+          {:error, :unauthorized} ->
+            Router.render_json(conn, %{errors: "Invalid credentials"})
+
+          {:error, :not_found} ->
+            Router.render_json(conn, %{errors: "Invalid account data"})
+
+          {:error, :not_funds} ->
+            Router.render_json(conn, %{errors: "You don't have enough funds"})
+
+          {:info, _account} ->
+            Router.render_json(conn, %{message: "Please check your transation", result: _account})
+
+          {:ok, _result} ->
+            Router.render_json(conn, %{
+              message: "Successful transfer!",
+              result: %{
+                "email" => _result.customer.email,
+                "new_balance" => _result.balance
+              }
+            })
+        end
 
       {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "Invalid account data"})
-
-      {:error, :not_funds} ->
-        Router.render_json(conn, %{errors: "You don't have enough funds"})
-
-      {:info, _account} ->
-        Router.render_json(conn, %{message: "Please check your transation", result: _account})
-
-      {:ok, _result} ->
-        Router.render_json(conn, %{
-          message: "Successful transfer!",
-          result: %{
-            "email" => _result.customer.email,
-            "new_balance" => _result.balance
-          }
-        })
+        Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
@@ -123,10 +134,12 @@ defmodule BankApi.Controllers.User do
   get "/terminate", assigns: %{an_option: :a_value} do
     token = Router.get_bearer_token(conn)
 
-    if Guardian.terminate_account(token) do
-      Router.render_json(conn, %{message: "Your account has been terminated"})
-    else
-      Router.render_json(conn, %{errors: "You need authenticated to this action"})
+    case Guardian.terminate_account(token) do
+      {:ok, _customer} ->
+        Router.render_json(conn, %{message: "Your account has been terminated"})
+
+      {:error, :not_found} ->
+        Router.render_json(conn, %{errors: "You need authenticated to this action"})
     end
   end
 

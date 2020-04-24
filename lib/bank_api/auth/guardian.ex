@@ -8,7 +8,7 @@ defmodule BankApi.Auth.Guardian do
   alias BankApi.Models.Customers
 
   @doc """
-    Callback implementation for Guardian.subject_for_token/2.  
+    Callback implementation for Guardian.subject_for_token/2.
   """
   def subject_for_token(resource, _claims) do
     sub = to_string(resource.id)
@@ -81,14 +81,12 @@ defmodule BankApi.Auth.Guardian do
     Get user from token
   """
   def get_user_by_token(token) do
-    {:ok, %{"id" => id}} = decode_and_verify(token)
+    case decode_and_verify(token) do
+      {:ok, %{"id" => id}} ->
+        {:ok, Customers.get_customer(id)}
 
-    case Customers.get_customer(id) do
-      nil ->
+      {:error, %ArgumentError{}} ->
         {:error, :not_found}
-
-      customer ->
-        {:ok, customer}
     end
   end
 
@@ -96,8 +94,12 @@ defmodule BankApi.Auth.Guardian do
     Terminate customer account and remove from database
   """
   def terminate_account(token) do
-    with {:ok, customer} <- get_user_by_token(token) do
-      Customers.delete_customer(customer)
+    case get_user_by_token(token) do
+      {:ok, _customer} ->
+        {:ok, Customers.delete_customer(_customer)}
+
+      {:error, :not_found} ->
+        {:error, :not_found}
     end
   end
 

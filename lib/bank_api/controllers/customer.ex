@@ -17,7 +17,9 @@ defmodule BankApi.Controllers.Customer do
     Show account logged
   """
   get "/" do
-    if Guardian.is_admin(conn) do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.is_admin(token) do
       customers =
         Customers.list_customers()
         |> Repo.preload(:accounts)
@@ -32,7 +34,9 @@ defmodule BankApi.Controllers.Customer do
     Create account route
   """
   post "/" do
-    if Guardian.is_admin(conn) do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.is_admin(token) do
       %{"customer" => customer} = conn.body_params
 
       case Customers.create_customer(customer) do
@@ -57,7 +61,9 @@ defmodule BankApi.Controllers.Customer do
     Show user logged by id
   """
   get "/:id" do
-    if Guardian.is_admin(conn) do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.is_admin(token) do
       %{"id" => id} = conn.path_params
 
       case Customers.get_customer(id) do
@@ -76,7 +82,9 @@ defmodule BankApi.Controllers.Customer do
     Update user logged by id
   """
   put "/:id" do
-    if Guardian.is_admin(conn) do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.is_admin(token) do
       %{"id" => id} = conn.path_params
       %{"customer" => params} = conn.body_params
 
@@ -101,7 +109,9 @@ defmodule BankApi.Controllers.Customer do
     Delete user logged by id
   """
   delete "/:id" do
-    if Guardian.is_admin(conn) do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.is_admin(token) do
       %{"id" => id} = conn.path_params
 
       case Customers.get_customer(id) do
@@ -115,12 +125,5 @@ defmodule BankApi.Controllers.Customer do
     else
       Router.render_json(conn, %{errors: "Unauthorized"})
     end
-  end
-
-  @doc """
-    Default route to page not found
-  """
-  match _ do
-    Router.render_json(conn, %{message: "Page not found"}, 404)
   end
 end

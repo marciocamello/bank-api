@@ -21,7 +21,7 @@ defmodule BankApi.Controllers.Auth do
         Router.render_json(conn, %{message: "Login success!", customer: customer, token: token})
 
       {:error, :unauthorized} ->
-        Router.render_json(conn, %{errors: "Invalid credentials"})
+        Router.render_json(conn, %{errors: "Unauthorized"})
 
       {:error, :not_found} ->
         Router.render_json(conn, %{errors: "Invalid credentials"})

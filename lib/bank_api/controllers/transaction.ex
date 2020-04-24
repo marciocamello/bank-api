@@ -26,7 +26,18 @@ defmodule BankApi.Controllers.Transaction do
       } = conn.body_params
 
       result = Transactions.filter_transactions(filter, type, period)
-      Router.render_json(conn, %{message: "All transactions", result: result})
+
+      filter =
+        if filter == "" do
+          "All"
+        else
+          String.capitalize(filter)
+        end
+
+      Router.render_json(conn, %{
+        message: filter <> " transactions",
+        result: result
+      })
     else
       Router.render_json(conn, %{errors: "Unauthorized"})
     end

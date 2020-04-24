@@ -19,10 +19,10 @@ defmodule BankApi.RouteHomeTest do
   test "returns Page not found" do
     conn =
       :get
-      |> conn("/missing", "")
+      |> conn("/api/missing", "")
       |> Router.call(@opts)
 
-    assert conn.state == :sent
     assert conn.status == 404
+    assert %{"message" => "Page not found"} = Jason.decode!(conn.resp_body)
   end
 end

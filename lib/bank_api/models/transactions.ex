@@ -125,8 +125,26 @@ defmodule BankApi.Models.Transactions do
     |> Repo.insert()
   end
 
-  @doc false
-  defp get_total_transactions(transactions) do
+  @doc """
+    Get total transactions with list
+
+  # Examples
+      iex> alias BankApi.Models.Transactions
+      iex> Transactions.get_total_transactions([])
+      iex> transaction = Transactions.get_total_transactions([
+        %BankApi.Schemas.Transaction{
+          account_from: "1@gmail.com",
+          account_to: "1@gmail.com",
+          id: 5,
+          inserted_at: ~N[2020-04-22 02:21:49],
+          type: "withdrawal",
+          updated_at: ~N[2020-04-22 02:21:49],
+          value: "10.00"
+        }
+      ])
+      #Decimal<10.00>
+  """
+  def get_total_transactions(transactions) do
     Enum.map(transactions, fn tr -> Map.get(tr, :value) end)
     |> Enum.reduce(0, fn h, total -> Decimal.add(total, h) end)
   end
