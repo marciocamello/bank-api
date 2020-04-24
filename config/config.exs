@@ -5,4 +5,4 @@ use Mix.Config
 config :bank_api,
   message_one: "BankApi config environments"
 
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

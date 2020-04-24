@@ -16,20 +16,18 @@ defmodule BankApi.Controllers.Transaction do
     Show total transactions
   """
   post "/report" do
-
     token = Router.get_bearer_token(conn)
-    if Guardian.is_admin(token) do
 
+    if Guardian.is_admin(token) do
       %{
         "filter" => filter,
         "type" => type,
         "period" => period
       } = conn.body_params
-  
+
       result = Transactions.filter_transactions(filter, type, period)
       Router.render_json(conn, %{message: "All transactions", result: result})
     else
-
       Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end

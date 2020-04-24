@@ -12,7 +12,6 @@ defmodule BankApiTransactionsTest do
   use BankApi.Fixtures, [:customer, :transaction]
 
   describe "transactions" do
-
     # register user
     test "Create admin account" do
       assert {:ok, _admin} = create_admin
@@ -21,19 +20,18 @@ defmodule BankApiTransactionsTest do
 
     # list all transactions
     test "List all transactions" do
-      
       assert {:ok, _admin} = create_admin
       assert {:ok, %Customer{}, _token} = auth_admin
-      
-      if assert Guardian.is_admin(_token) == true do
 
+      if assert Guardian.is_admin(_token) == true do
         %{
           "filter" => filter,
           "type" => type,
           "period" => period
         } = @all_attrs
-      
-        assert %{"total" => total, "transactions" => transactions} = Transactions.filter_transactions(filter, type, period)
+
+        assert %{"total" => total, "transactions" => transactions} =
+                 Transactions.filter_transactions(filter, type, period)
       end
     end
   end

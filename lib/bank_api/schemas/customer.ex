@@ -17,7 +17,7 @@ defmodule BankApi.Schemas.Customer do
     field(:password, :string)
     field(:phone, :string)
     field(:acl, :string)
-    has_one :accounts, BankApi.Schemas.Account
+    has_one(:accounts, BankApi.Schemas.Account)
 
     timestamps()
   end

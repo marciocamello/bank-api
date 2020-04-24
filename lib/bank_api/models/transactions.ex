@@ -34,9 +34,10 @@ defmodule BankApi.Models.Transactions do
       }
   """
   def filter_transactions(filter, type, period) do
-    query = filter_period(filter, period, type)
-    |> list_transactions
- 
+    query =
+      filter_period(filter, period, type)
+      |> list_transactions
+
     filtered_params(query)
   end
 
@@ -50,18 +51,20 @@ defmodule BankApi.Models.Transactions do
 
   @doc false
   defp get_period(filter, period) do
-
-    year = DateTime.utc_now.year
-    month = DateTime.utc_now.month
-    day = DateTime.utc_now.month
+    year = DateTime.utc_now().year
+    month = DateTime.utc_now().month
+    day = DateTime.utc_now().month
 
     case filter do
       "daily" ->
         %{"year" => year, "month" => month, "day" => String.to_integer(period)}
+
       "monthly" ->
         %{"year" => year, "month" => String.to_integer(period), "day" => 01}
+
       "yearly" ->
         %{"year" => String.to_integer(period), "month" => month, "day" => 01}
+
       _ ->
         %{"year" => year, "month" => month, "day" => day}
     end
@@ -70,14 +73,16 @@ defmodule BankApi.Models.Transactions do
   @doc false
   defp get_dates(filter, year, month, day) do
     start_date = NaiveDateTime.from_erl!({{year, month, day}, {00, 00, 00}})
+
     case filter do
       "daily" ->
         end_date = NaiveDateTime.from_erl!({{year, month, day}, {23, 59, 59}})
         %{"end_date" => end_date, "start_date" => start_date}
+
       _ ->
-      days_in_month = Date.days_in_month(start_date)
-      end_date = NaiveDateTime.from_erl!({{year, month, days_in_month}, {00, 00, 00}})
-      %{"end_date" => end_date, "start_date" => start_date}
+        days_in_month = Date.days_in_month(start_date)
+        end_date = NaiveDateTime.from_erl!({{year, month, days_in_month}, {00, 00, 00}})
+        %{"end_date" => end_date, "start_date" => start_date}
     end
   end
 
@@ -91,9 +96,12 @@ defmodule BankApi.Models.Transactions do
   defp filtered_query(type, start_date, end_date) do
     case type do
       "" ->
-        from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date
+        from(t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date)
+
       _ ->
-        from t in Transaction, where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date and t.type == ^type
+        from(t in Transaction,
+          where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date and t.type == ^type
+        )
     end
   end
 
@@ -120,6 +128,6 @@ defmodule BankApi.Models.Transactions do
   @doc false
   defp get_total_transactions(transactions) do
     Enum.map(transactions, fn tr -> Map.get(tr, :value) end)
-      |> Enum.reduce(0, fn (h, total) -> Decimal.add(total, h) end)
+    |> Enum.reduce(0, fn h, total -> Decimal.add(total, h) end)
   end
 end

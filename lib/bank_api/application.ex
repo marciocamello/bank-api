@@ -31,6 +31,7 @@ defmodule BankApi.Application do
   """
   defp cowboy_port do
     port = Application.get_env(:bank_api, :cowboy_port, 4000)
+
     if is_bitstring(port) do
       String.to_integer(port)
     else

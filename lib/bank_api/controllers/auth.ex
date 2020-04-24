@@ -24,7 +24,7 @@ defmodule BankApi.Controllers.Auth do
         Router.render_json(conn, %{errors: "Invalid credentials"})
 
       {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "Invalid credentials"})        
+        Router.render_json(conn, %{errors: "Invalid credentials"})
     end
   end
 

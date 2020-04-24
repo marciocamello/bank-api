@@ -18,14 +18,18 @@ defmodule BankApi.Models.Accounts do
         account
         |> Account.changeset(attrs)
         |> Repo.update()
+
       false ->
-        account = account
-        |> Account.changeset(attrs)
-        {:info, %{
-          email: account.data.customer.email,
-          old_balance: account.data.balance,
-          new_balance: account.changes.balance,
-        }}
+        account =
+          account
+          |> Account.changeset(attrs)
+
+        {:info,
+         %{
+           email: account.data.customer.email,
+           old_balance: account.data.balance,
+           new_balance: account.changes.balance
+         }}
     end
   end
 
@@ -45,25 +49,29 @@ defmodule BankApi.Models.Accounts do
         to
         |> Account.changeset(to_attrs)
         |> Repo.update()
+
       false ->
-        from = from
-        |> Account.changeset(from_attrs)
+        from =
+          from
+          |> Account.changeset(from_attrs)
 
-        to = to
-        |> Account.changeset(to_attrs)
+        to =
+          to
+          |> Account.changeset(to_attrs)
 
-        {:info, %{
-          from: %{
-            email: from.data.customer.email,
-            old_balance: from.data.balance,
-            new_balance: from.changes.balance,
-          },
-          to: %{
-            email: to.data.customer.email,
-            old_balance: to.data.balance,
-            new_balance: to.changes.balance,
-          }
-        }}
+        {:info,
+         %{
+           from: %{
+             email: from.data.customer.email,
+             old_balance: from.data.balance,
+             new_balance: from.changes.balance
+           },
+           to: %{
+             email: to.data.customer.email,
+             old_balance: to.data.balance,
+             new_balance: to.changes.balance
+           }
+         }}
     end
   end
 end

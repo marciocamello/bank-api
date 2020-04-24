@@ -71,7 +71,9 @@ defmodule BankApi.Auth.Guardian do
     Create JWT token from Guardin encode and sign
   """
   defp create_token(customer) do
-    {:ok, token, _claims} = encode_and_sign(customer, %{"id" => customer.id, "acl" => customer.acl})
+    {:ok, token, _claims} =
+      encode_and_sign(customer, %{"id" => customer.id, "acl" => customer.acl})
+
     {:ok, customer, token}
   end
 
@@ -80,9 +82,11 @@ defmodule BankApi.Auth.Guardian do
   """
   def get_user_by_token(token) do
     {:ok, %{"id" => id}} = decode_and_verify(token)
+
     case Customers.get_customer(id) do
       nil ->
         {:error, :not_found}
+
       customer ->
         {:ok, customer}
     end
@@ -107,6 +111,7 @@ defmodule BankApi.Auth.Guardian do
     case acl do
       "admin" ->
         true
+
       _ ->
         false
     end

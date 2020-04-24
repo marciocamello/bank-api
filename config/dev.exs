@@ -9,7 +9,8 @@ config :bank_api, BankApi.Repo,
   database: "bank_api_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost" # docker container bank-db-api
+  # docker container bank-db-api
+  hostname: "localhost"
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 

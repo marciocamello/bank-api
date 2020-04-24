@@ -11,7 +11,6 @@ defmodule BankApiAuthTest do
   use BankApi.Fixtures, [:customer]
 
   describe "auth" do
-
     # login user
     test "Login customer account" do
       assert {:ok, _customer} = create_customer

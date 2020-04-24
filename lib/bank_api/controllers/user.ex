@@ -47,30 +47,35 @@ defmodule BankApi.Controllers.User do
   post "/withdrawal" do
     token = Router.get_bearer_token(conn)
     {:ok, customer} = Guardian.get_user_by_token(token)
-    params = conn.body_params
+
+    params =
+      conn.body_params
       |> Map.put("customer", customer)
 
     case Transactions.Action.withdrawal(params) do
       {:error, :zero_value} ->
         Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
-        
+
       {:error, :unauthorized} ->
         Router.render_json(conn, %{errors: "Invalid credentials"})
 
       {:error, :not_found} ->
         Router.render_json(conn, %{errors: "Invalid account data"})
-      
+
       {:error, :not_funds} ->
         Router.render_json(conn, %{errors: "You don't have enough funds"})
-      
+
       {:info, _account} ->
         Router.render_json(conn, %{message: "Please check your transation", result: _account})
-          
+
       {:ok, _result} ->
-        Router.render_json(conn, %{message: "Successful withdrawal!", result: %{
-          "email" => _result.customer.email,
-          "new_balance" => _result.balance
-        }})
+        Router.render_json(conn, %{
+          message: "Successful withdrawal!",
+          result: %{
+            "email" => _result.customer.email,
+            "new_balance" => _result.balance
+          }
+        })
     end
   end
 
@@ -80,7 +85,9 @@ defmodule BankApi.Controllers.User do
   post "/transfer" do
     token = Router.get_bearer_token(conn)
     {:ok, customer} = Guardian.get_user_by_token(token)
-    params = conn.body_params
+
+    params =
+      conn.body_params
       |> Map.put("customer", customer)
 
     case Transactions.Action.transfer(params) do
@@ -92,18 +99,21 @@ defmodule BankApi.Controllers.User do
 
       {:error, :not_found} ->
         Router.render_json(conn, %{errors: "Invalid account data"})
-      
+
       {:error, :not_funds} ->
         Router.render_json(conn, %{errors: "You don't have enough funds"})
- 
+
       {:info, _account} ->
         Router.render_json(conn, %{message: "Please check your transation", result: _account})
-          
+
       {:ok, _result} ->
-        Router.render_json(conn, %{message: "Successful transfer!", result: %{
-          "email" => _result.customer.email,
-          "new_balance" => _result.balance
-        }})
+        Router.render_json(conn, %{
+          message: "Successful transfer!",
+          result: %{
+            "email" => _result.customer.email,
+            "new_balance" => _result.balance
+          }
+        })
     end
   end
 

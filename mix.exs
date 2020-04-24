@@ -9,8 +9,8 @@ defmodule BankApi.MixProject do
       elixir: "~> 1.10",
       description:
         "Financial application, create customers and accounts, and operations financials.",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
       releases: releases(),
@@ -29,7 +29,12 @@ defmodule BankApi.MixProject do
 
       # Tests
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test]
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 

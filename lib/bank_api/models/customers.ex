@@ -53,7 +53,7 @@ defmodule BankApi.Models.Customers do
   """
   def bind_account(customer) do
     Ecto.build_assoc(customer, :accounts)
-      |> Repo.insert!()
+    |> Repo.insert!()
   end
 
   @doc """
@@ -124,8 +124,8 @@ defmodule BankApi.Models.Customers do
       iex> alias BankApi.Models.Customers
   """
   def get_user_authenticated(id) do
-    #{:ok, %{"id" => id}} = decode_and_verify(token)
-    {:ok, customer } = Customers.get_customer(id)
+    # {:ok, %{"id" => id}} = decode_and_verify(token)
+    {:ok, customer} = Customers.get_customer(id)
   end
 
   @doc """
@@ -144,8 +144,10 @@ defmodule BankApi.Models.Customers do
         {:error, :not_found}
 
       customer ->
-        customer = customer
-        |> Repo.preload(accounts: [:customer])
+        customer =
+          customer
+          |> Repo.preload(accounts: [:customer])
+
         {:ok, customer}
     end
   end

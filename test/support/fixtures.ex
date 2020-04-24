@@ -2,9 +2,8 @@ defmodule BankApi.Fixtures do
   @moduledoc """
   A module for defining fixtures that can be used in tests.
   """
-  
-  def customer do
 
+  def customer do
     alias BankApi.Models.Customers
     alias BankApi.Schemas.Customer
     alias BankApi.Schemas.Account
@@ -20,6 +19,15 @@ defmodule BankApi.Fixtures do
         acl: "customer"
       }
 
+      @create2_attrs %{
+        email: "tes2t@email.com",
+        firstName: "Test2",
+        lastName: "Andre",
+        phone: "37 98406 2829",
+        password: "123123123",
+        acl: "customer"
+      }
+
       @withdrawal_attrs %{
         "value" => 10.00,
         "password_confirm" => false
@@ -30,9 +38,21 @@ defmodule BankApi.Fixtures do
         "password_confirm" => @create_attrs.password
       }
 
+      @transfer_attrs %{
+        "account_to" => @create_attrs.email,
+        "value" => 10.00,
+        "password_confirm" => false
+      }
+
+      @transfer_confirm_attrs %{
+        "account_to" => @create_attrs.email,
+        "value" => 10.00,
+        "password_confirm" => @create_attrs.password
+      }
+
       @doc false
-      def create_customer do
-        {:ok, customer} = Customers.create_customer(@create_attrs)
+      def create_customer(attrs \\ @create_attrs) do
+        {:ok, customer} = Customers.create_customer(attrs)
       end
 
       @doc false
@@ -41,8 +61,8 @@ defmodule BankApi.Fixtures do
       end
 
       @doc false
-      def auth_customer do
-        {:ok, %Customer{}, _token} =  Guardian.authenticate(@create_attrs.email, @create_attrs.password)
+      def auth_customer(attrs \\ @create_attrs) do
+        {:ok, %Customer{}, _token} = Guardian.authenticate(attrs.email, attrs.password)
       end
 
       @doc false
@@ -57,22 +77,31 @@ defmodule BankApi.Fixtures do
 
       @doc false
       def create_customers do
-        {:ok, _customer } = Customers.create_customer(%{
-          email: Faker.Internet.email(),
-          firstName: Faker.Name.PtBr.name(),
-          lastName: Faker.Name.PtBr.name(),
-          password: "123123123",
-          phone: Faker.Phone.EnUs.phone(),
-          acl: "customer"
-        })
+        {:ok, _customer} =
+          Customers.create_customer(%{
+            email: Faker.Internet.email(),
+            firstName: Faker.Name.PtBr.name(),
+            lastName: Faker.Name.PtBr.name(),
+            password: "123123123",
+            phone: Faker.Phone.EnUs.phone(),
+            acl: "customer"
+          })
+
         Customers.bind_account(_customer)
       end
 
       @doc false
       def seed_customers(count) do
         for n <- 1..count do
-          create_customers()                     
+          create_customers()
         end
+      end
+
+      @doc false
+      def create_customer_and_token do
+        {:ok, _customer} = create_customer
+        %Account{} = bind_account(_customer)
+        {:ok, %Customer{}, _token} = auth_customer
       end
 
       @doc false
@@ -80,19 +109,50 @@ defmodule BankApi.Fixtures do
         {:ok, _customer} = create_customer
         %Account{} = bind_account(_customer)
         {:ok, %Customer{}, _token} = auth_customer
+        {:ok, _customer} = get_user_by_token(_token)
+      end
+
+      @doc false
+      def create_customer_and_authenticate_token do
+        {:ok, _customer} = create_customer
+        %Account{} = bind_account(_customer)
+        {:ok, %Customer{}, _token} = auth_customer
+      end
+
+      @doc false
+      def create_customer_and_authenticate_transfer do
+        # acccount receive money
+        {:ok, _customer} = create_customer(@create_attrs)
+        bind_account(_customer)
+
+        # account sender money
+        {:ok, _customer} = create_customer(@create2_attrs)
+        bind_account(_customer)
+        {:ok, %Customer{}, _token} = auth_customer(@create2_attrs)
+        {:ok, _customer} = get_user_by_token(_token)
+      end
+
+      @doc false
+      def create_customer_and_authenticate_transfer_token do
+        # acccount receive money
+        {:ok, _customer} = create_customer(@create_attrs)
+        bind_account(_customer)
+
+        # account sender money
+        {:ok, _customer} = create_customer(@create2_attrs)
+        bind_account(_customer)
+        {:ok, %Customer{}, _token} = auth_customer(@create2_attrs)
       end
     end
   end
 
   @docs false
   def transaction do
-
     alias BankApi.Models.Customers
     alias BankApi.Schemas.Customer
     alias BankApi.Auth.Guardian
 
     quote do
-
       @create_admin_attrs %{
         email: "admin_test@email.com",
         firstName: "Admin",
@@ -127,25 +187,26 @@ defmodule BankApi.Fixtures do
       }
 
       @doc false
-      def create_admin do
-        {:ok, admin} = Customers.create_customer(@create_admin_attrs)
+      def create_admin(attrs \\ @create_admin_attrs) do
+        {:ok, admin} = Customers.create_customer(attrs)
       end
 
       @doc false
-      def auth_admin do
-        {:ok, %Customer{}, _token} =  Guardian.authenticate(@create_admin_attrs.email, @create_admin_attrs.password)
+      def auth_admin(attrs \\ @create_admin_attrs) do
+        {:ok, %Customer{}, _token} = Guardian.authenticate(attrs.email, attrs.password)
       end
 
       @doc false
       defp create_transactions(customer) do
-        params = @withdrawal_confirm_attrs
+        params =
+          @withdrawal_confirm_attrs
           |> Map.put("customer", customer)
       end
 
       @doc false
-      def seed_transactions(customer,list, count) do
+      def seed_transactions(customer, list, count) do
         for n <- 1..count do
-          create_transactions(customer)                         
+          create_transactions(customer)
         end
       end
     end
@@ -155,7 +216,6 @@ defmodule BankApi.Fixtures do
   Apply the `fixtures`.
   """
   defmacro __using__(fixtures) when is_list(fixtures) do
-    for fixture <- fixtures, is_atom(fixture),
-      do: apply(__MODULE__, fixture, [])
+    for fixture <- fixtures, is_atom(fixture), do: apply(__MODULE__, fixture, [])
   end
 end
