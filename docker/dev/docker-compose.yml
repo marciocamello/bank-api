@@ -15,7 +15,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
     volumes:
-      - /home/marcio/development/projects/Elixir/bank_api:/app
+      - ../..:/app
     ports:
       - "4000:4000"
     networks:
@@ -28,7 +28,7 @@ services:
     image: postgres
     restart: always
     volumes:
-      - "/home/marcio/development/bank-data:/var/lib/postgres"
+      - "bank_data:/var/lib/postgres"
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
@@ -55,3 +55,7 @@ services:
 networks:
   bank-network:
     driver: bridge
+
+volumes:
+  bank_data:
+    external: true

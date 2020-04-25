@@ -22,5 +22,6 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 bank_api-*.tar
 
-
 .elixir_ls
+
+.idea
