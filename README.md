@@ -239,8 +239,8 @@ Password confirmation is false
 Body
 ```json
 {
-	"value": "10.00",
-	"password_confirm": false
+  "value": "10.00",
+  "password_confirm": false
 }
 ```
 
@@ -262,8 +262,8 @@ Password confirmation is true
 Body
 ```json
 {
-	"value": "10.00",
-	"password_confirm": "123123123"
+  "value": "10.00",
+  "password_confirm": "123123123"
 }
 ```
 
@@ -314,9 +314,9 @@ Password confirmation is false
 Body
 ```json
 {
-    "account_to": "harrypotter@hogwarts.com",
-	"value": "10.00",
-	"password_confirm": false
+  "account_to": "harrypotter@hogwarts.com",
+  "value": "10.00",
+  "password_confirm": false
 }
 ```
 
@@ -345,9 +345,9 @@ Password confirmation is true
 Body
 ```json
 {
-    "account_to": "harrypotter@hogwarts.com",
-	"value": "10.00",
-	"password_confirm": "123123123"
+  "account_to": "harrypotter@hogwarts.com",
+  "value": "10.00",
+  "password_confirm": "123123123"
 }
 ```
 
