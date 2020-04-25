@@ -1,15 +1,16 @@
 version: "2"
 services:
-
   #APP
   app:
     container_name: bank-api
-    build: 
+    hostname: bank-api
+    build:
       context: .
       dockerfile: Dockerfile
     tty: true
     privileged: false
     environment:
+      MIX_ENV: dev
       APP_ENV: local
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
@@ -20,9 +21,10 @@ services:
     networks:
       - bank-network
 
-  # POSTGRES DATABASE    
+  # POSTGRES DATABASE
   postgres:
     container_name: bank-db
+    hostname: bank-db
     image: postgres
     restart: always
     volumes:
@@ -38,6 +40,7 @@ services:
   # PGADMIN
   pgadmin:
     container_name: bank-db-admin
+    hostname: bank-db-admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: "mac3designer@gmail.com"
@@ -47,8 +50,8 @@ services:
     depends_on:
       - postgres
     networks:
-      - bank-network 
+      - bank-network
 
-networks: 
+networks:
   bank-network:
-    driver: bridge      
+    driver: bridge
