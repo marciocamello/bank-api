@@ -25,5 +25,8 @@ EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
 RUN rm -rf /var/cache/* \
     && rm -rf /tmp/*
 
+COPY entrypoint.sh /root/entrypoint.sh
+RUN chown +x /root/entrypoint.sh
+
 # START
-CMD [ "iex", "-S", "mix", "run", "--no-halt" ]
+CMD [ "bash", "-c", "/root/entrypoint.sh" ]

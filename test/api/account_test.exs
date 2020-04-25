@@ -37,8 +37,7 @@ defmodule BankApi.Api.AccountTest do
           "email" => email,
           "firstName" => firstName,
           "lastName" => lastName,
-          "phone" => phone,
-          "acl" => acl
+          "phone" => phone
         }
       } = Jason.decode!(conn.resp_body)
 
@@ -46,7 +45,6 @@ defmodule BankApi.Api.AccountTest do
       assert firstName == @create_attrs.firstName
       assert lastName == @create_attrs.lastName
       assert phone == @create_attrs.phone
-      assert acl == @create_attrs.acl
     end
 
     # create user failed

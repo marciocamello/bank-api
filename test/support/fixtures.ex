@@ -16,8 +16,7 @@ defmodule BankApi.Fixtures do
         firstName: "Test",
         lastName: "Marcio",
         phone: "37 98406 2829",
-        password: "123123123",
-        acl: "user"
+        password: "123123123"
       }
 
       @create2_attrs %{
@@ -25,8 +24,7 @@ defmodule BankApi.Fixtures do
         firstName: "Test2",
         lastName: "Andre",
         phone: "37 98406 2829",
-        password: "123123123",
-        acl: "user"
+        password: "123123123"
       }
 
       @update_attrs %{
@@ -34,8 +32,7 @@ defmodule BankApi.Fixtures do
         firstName: "Test Update",
         lastName: "Marcio Jose",
         phone: "37 98406 2829",
-        password: "123123123",
-        acl: "user"
+        password: "123123123"
       }
 
       @withdrawal_attrs %{
@@ -98,8 +95,7 @@ defmodule BankApi.Fixtures do
             firstName: Faker.Name.PtBr.name(),
             lastName: Faker.Name.PtBr.name(),
             password: "123123123",
-            phone: Faker.Phone.EnUs.phone(),
-            acl: "user"
+            phone: Faker.Phone.EnUs.phone()
           })
 
         Users.bind_account(user)
