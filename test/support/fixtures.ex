@@ -4,11 +4,11 @@ defmodule BankApi.Fixtures do
   """
 
   @doc false
-  def customer do
+  def user do
     alias BankApi.Auth.Guardian
-    alias BankApi.Models.Customers
+    alias BankApi.Models.Users
     alias BankApi.Schemas.Account
-    alias BankApi.Schemas.Customer
+    alias BankApi.Schemas.User
 
     quote do
       @create_attrs %{
@@ -17,7 +17,7 @@ defmodule BankApi.Fixtures do
         lastName: "Marcio",
         phone: "37 98406 2829",
         password: "123123123",
-        acl: "customer"
+        acl: "user"
       }
 
       @create2_attrs %{
@@ -26,7 +26,7 @@ defmodule BankApi.Fixtures do
         lastName: "Andre",
         phone: "37 98406 2829",
         password: "123123123",
-        acl: "customer"
+        acl: "user"
       }
 
       @update_attrs %{
@@ -35,7 +35,7 @@ defmodule BankApi.Fixtures do
         lastName: "Marcio Jose",
         phone: "37 98406 2829",
         password: "123123123",
-        acl: "customer"
+        acl: "user"
       }
 
       @withdrawal_attrs %{
@@ -61,13 +61,13 @@ defmodule BankApi.Fixtures do
       }
 
       @doc false
-      def create_customer(attrs \\ @create_attrs) do
-        {:ok, customer} = Customers.create_customer(attrs)
+      def create_user(attrs \\ @create_attrs) do
+        {:ok, user} = Users.create_user(attrs)
       end
 
       @doc false
-      def bind_account(customer) do
-        Customers.bind_account(customer)
+      def bind_account(user) do
+        Users.bind_account(user)
       end
 
       @doc false
@@ -76,95 +76,95 @@ defmodule BankApi.Fixtures do
       end
 
       @doc false
-      def auth_customer(attrs \\ @create_attrs) do
-        {:ok, customer, token} = auth()
+      def auth_user(attrs \\ @create_attrs) do
+        {:ok, user, token} = auth()
       end
 
       @doc false
-      def get_customer(id) do
-        Customers.get_customer(id)
+      def get_user(id) do
+        Users.get_user(id)
       end
 
       @doc false
       def get_user_by_token(token) do
-        {:ok, customer} = Guardian.get_user_by_token(token)
+        {:ok, user} = Guardian.get_user_by_token(token)
       end
 
       @doc false
-      def create_customers do
-        {:ok, customer} =
-          Customers.create_customer(%{
+      def create_users do
+        {:ok, user} =
+          Users.create_user(%{
             email: Faker.Internet.email(),
             firstName: Faker.Name.PtBr.name(),
             lastName: Faker.Name.PtBr.name(),
             password: "123123123",
             phone: Faker.Phone.EnUs.phone(),
-            acl: "customer"
+            acl: "user"
           })
 
-        Customers.bind_account(customer)
+        Users.bind_account(user)
       end
 
       @doc false
-      def seed_customers(count) do
+      def seed_users(count) do
         for n <- 1..count do
-          create_customers()
+          create_users()
         end
       end
 
       @doc false
-      def create_customer_and_token do
-        {:ok, customer} = create_customer()
-        bind_account(customer)
-        {:ok, customer, token} = auth_customer()
+      def create_user_and_token do
+        {:ok, user} = create_user()
+        bind_account(user)
+        {:ok, user, token} = auth_user()
       end
 
       @doc false
-      def create_customer_and_authenticate do
-        {:ok, customer} = create_customer()
-        bind_account(customer)
-        {:ok, customer, token} = auth_customer()
-        {:ok, customer} = get_user_by_token(token)
+      def create_user_and_authenticate do
+        {:ok, user} = create_user()
+        bind_account(user)
+        {:ok, user, token} = auth_user()
+        {:ok, user} = get_user_by_token(token)
       end
 
       @doc false
-      def create_customer_and_authenticate_token do
-        {:ok, customer} = create_customer()
-        bind_account(customer)
-        {:ok, customer, token} = auth_customer()
+      def create_user_and_authenticate_token do
+        {:ok, user} = create_user()
+        bind_account(user)
+        {:ok, user, token} = auth_user()
       end
 
       @doc false
-      def create_customer_and_authenticate_transfer do
+      def create_user_and_authenticate_transfer do
         # acccount receive money
-        {:ok, customer} = create_customer(@create_attrs)
-        bind_account(customer)
+        {:ok, user} = create_user(@create_attrs)
+        bind_account(user)
 
         # account sender money
-        {:ok, customer} = create_customer(@create2_attrs)
-        bind_account(customer)
-        {:ok, customer, token} = auth_customer(@create2_attrs)
-        {:ok, customer} = get_user_by_token(token)
+        {:ok, user} = create_user(@create2_attrs)
+        bind_account(user)
+        {:ok, user, token} = auth_user(@create2_attrs)
+        {:ok, user} = get_user_by_token(token)
       end
 
       @doc false
-      def create_customer_and_authenticate_transfer_token do
+      def create_user_and_authenticate_transfer_token do
         # acccount receive money
-        {:ok, customer} = create_customer(@create_attrs)
-        bind_account(customer)
+        {:ok, user} = create_user(@create_attrs)
+        bind_account(user)
 
         # account sender money
-        {:ok, customer} = create_customer(@create2_attrs)
-        bind_account(customer)
-        {:ok, customer, token} = auth_customer(@create2_attrs)
+        {:ok, user} = create_user(@create2_attrs)
+        bind_account(user)
+        {:ok, user, token} = auth_user(@create2_attrs)
       end
     end
   end
 
   @doc false
   def transaction do
-    alias BankApi.Models.Customers
-    alias BankApi.Schemas.Customer
+    alias BankApi.Models.Users
+    alias BankApi.Schemas.User
     alias BankApi.Auth.Guardian
 
     quote do
@@ -203,25 +203,25 @@ defmodule BankApi.Fixtures do
 
       @doc false
       def create_admin(attrs \\ @create_admin_attrs) do
-        {:ok, admin} = Customers.create_customer(attrs)
+        {:ok, admin} = Users.create_user(attrs)
       end
 
       @doc false
       def auth_admin(attrs \\ @create_admin_attrs) do
-        {:ok, customer, token} = Guardian.authenticate(attrs.email, attrs.password)
+        {:ok, user, token} = Guardian.authenticate(attrs.email, attrs.password)
       end
 
       @doc false
-      defp create_transactions(customer) do
+      defp create_transactions(user) do
         params =
           @withdrawal_confirm_attrs
-          |> Map.put("customer", customer)
+          |> Map.put("user", user)
       end
 
       @doc false
-      def seed_transactions(customer, list, count) do
+      def seed_transactions(user, list, count) do
         for n <- 1..count do
-          create_transactions(customer)
+          create_transactions(user)
         end
       end
     end

@@ -3,12 +3,12 @@ defmodule BankApi.Models.Transactions.Action do
     Transactions actions
   """
   alias BankApi.Models.Transactions
-  alias BankApi.Models.Customers
+  alias BankApi.Models.Users
   alias BankApi.Models.Accounts
   alias BankApi.Auth.Guardian
 
   @doc """
-    Withdrawal money from customer account
+    Withdrawal money from user account
 
   # Examples
       iex> alias BankApi.Models.Transactions
@@ -18,7 +18,7 @@ defmodule BankApi.Models.Transactions.Action do
   """
   def withdrawal(params) do
     %{
-      "customer" => customer,
+      "user" => user,
       "value" => value,
       "password_confirm" => password_confirm
     } = params
@@ -26,17 +26,17 @@ defmodule BankApi.Models.Transactions.Action do
     # check value is less then 0.00
     with {:ok, value} <- check_value(value) do
       # udate balance from accounts and a request value
-      case update_balance(customer.accounts.balance, value) do
+      case update_balance(user.accounts.balance, value) do
         {:ok, new_balance} ->
           # check password confirmation before finish operation
-          case password_confirmation(customer, password_confirm) do
+          case password_confirmation(user, password_confirm) do
             {:error, :unauthorized} ->
               {:error, :unauthorized}
 
             {:info, :wait_confirmation} ->
               {:info, _account} =
                 Accounts.update_balance(
-                  customer.accounts,
+                  user.accounts,
                   %{"balance" => new_balance}
                 )
 
@@ -44,14 +44,14 @@ defmodule BankApi.Models.Transactions.Action do
               # create transaction
               Transactions.create_transaction(%{
                 "value" => value,
-                "account_from" => customer.email,
-                "account_to" => customer.email,
+                "account_from" => user.email,
+                "account_to" => user.email,
                 "type" => "withdrawal"
               })
 
               {:ok, account} =
                 Accounts.update_balance(
-                  customer.accounts,
+                  user.accounts,
                   %{"balance" => new_balance},
                   true
                 )
@@ -64,22 +64,22 @@ defmodule BankApi.Models.Transactions.Action do
   end
 
   @doc """
-    Transfer money from customer 
-    account to other customer account
+    Transfer money from user
+    account to other user account
 
   # Examples
       iex> alias BankApi.Models.Transactions
-      iex> alias BankApi.Models.Customers
+      iex> alias BankApi.Models.Users
       iex> params = %{"account" => "teste@email.com", "value" => 100.00}
-      iex> {:ok, customer} = Customers.get_by_email(account)
+      iex> {:ok, user} = Users.get_by_email(account)
       iex> params = conn.body_params
-        |> Map.put("customer", customer)
+        |> Map.put("user", user)
       iex> Transactions.transfer(params)
       {:ok, %BankApi.Schemas.Account{}}
   """
   def transfer(params) do
     %{
-      "customer" => customer,
+      "user" => user,
       "account_to" => account_to,
       "value" => value,
       "password_confirm" => password_confirm
@@ -88,23 +88,23 @@ defmodule BankApi.Models.Transactions.Action do
     # check value is less then 0.00
     with {:ok, value} <- check_value(value) do
       # check account to transfer by email
-      with {:ok, account_to} <- Customers.get_by_email(account_to) do
+      with {:ok, account_to} <- Users.get_by_email(account_to) do
         # udate balance from accounts and a request value and to request
-        case update_balance(customer.accounts.balance, account_to.accounts.balance, value) do
+        case update_balance(user.accounts.balance, account_to.accounts.balance, value) do
           {:ok, new_balance} ->
             # get balance from sender and balance from receiver accounts
             %{"new_from_balance" => new_from_balance, "new_to_balance" => new_to_balance} =
               new_balance
 
             # check password confirmation before finish operation
-            case password_confirmation(customer, password_confirm) do
+            case password_confirmation(user, password_confirm) do
               {:error, :unauthorized} ->
                 {:error, :unauthorized}
 
               {:info, :wait_confirmation} ->
                 {:info, _account} =
                   Accounts.update_balance(
-                    customer.accounts,
+                    user.accounts,
                     account_to.accounts,
                     %{"balance" => new_from_balance},
                     %{"balance" => new_to_balance}
@@ -114,14 +114,14 @@ defmodule BankApi.Models.Transactions.Action do
                 # create transaction
                 Transactions.create_transaction(%{
                   "value" => value,
-                  "account_from" => customer.email,
+                  "account_from" => user.email,
                   "account_to" => account_to.email,
                   "type" => "transfer"
                 })
 
                 {:ok, account} =
                   Accounts.update_balance(
-                    customer.accounts,
+                    user.accounts,
                     account_to.accounts,
                     %{"balance" => new_from_balance},
                     %{"balance" => new_to_balance},
@@ -148,9 +148,9 @@ defmodule BankApi.Models.Transactions.Action do
   end
 
   @doc false
-  defp password_confirmation(customer, password_confirm \\ false) do
+  defp password_confirmation(user, password_confirm \\ false) do
     if password_confirm do
-      case Guardian.validate_password(password_confirm, customer.password) do
+      case Guardian.validate_password(password_confirm, user.password) do
         true ->
           {:ok, :confirmed}
 

@@ -5,8 +5,8 @@ defmodule BankApi.Auth.Guardian do
   use Guardian, otp_app: :bank_api
 
   alias BankApi.Repo
-  alias BankApi.Models.Customers
-  alias BankApi.Schemas.Customer
+  alias BankApi.Models.Users
+  alias BankApi.Schemas.User
 
   @doc """
     Callback implementation for Guardian.subject_for_token/2.
@@ -35,7 +35,7 @@ defmodule BankApi.Auth.Guardian do
   def resource_from_claims(claims) do
     id = claims["sub"]
 
-    case Customers.get_customer(id) do
+    case Users.get_user(id) do
       nil ->
         {:error, :reason_for_error}
 
@@ -45,15 +45,15 @@ defmodule BankApi.Auth.Guardian do
   end
 
   @doc """
-    Authenticate customer by email and password
+    Authenticate user by email and password
     Check encrypted password and your database hash
     Create a new token and add to esponse
   """
   def authenticate(email, password) do
-    with {:ok, customer} <- Customers.get_by_email(email) do
-      case validate_password(password, customer.password) do
+    with {:ok, user} <- Users.get_by_email(email) do
+      case validate_password(password, user.password) do
         true ->
-          create_token(customer)
+          create_token(user)
 
         false ->
           {:error, :unauthorized}
@@ -71,11 +71,11 @@ defmodule BankApi.Auth.Guardian do
   @doc """
     Create JWT token from Guardin encode and sign
   """
-  defp create_token(customer) do
+  defp create_token(user) do
     {:ok, token, _claims} =
-      encode_and_sign(customer, %{"id" => customer.id, "acl" => customer.acl})
+      encode_and_sign(user, %{"id" => user.id, "acl" => user.acl})
 
-    {:ok, customer, token}
+    {:ok, user, token}
   end
 
   @doc """
@@ -87,12 +87,12 @@ defmodule BankApi.Auth.Guardian do
         {:error, :not_found}
 
       {:ok, %{"id" => id}} ->
-        case Customers.get_customer(id) do
+        case Users.get_user(id) do
           nil ->
             {:error, :not_found}
 
-          _customer ->
-            {:ok, _customer}
+          _user ->
+            {:ok, _user}
         end
 
       {:error, %CaseClauseError{term: {:error, {:case_clause, 34}}}} ->
@@ -104,12 +104,12 @@ defmodule BankApi.Auth.Guardian do
   end
 
   @doc """
-    Terminate customer account and remove from database
+    Terminate user account and remove from database
   """
   def terminate_account(token) do
     case get_user_by_token(token) do
-      {:ok, _customer} ->
-        {:ok, Customers.delete_customer(_customer)}
+      {:ok, _user} ->
+        {:ok, Users.delete_user(_user)}
 
       {:error, :not_found} ->
         {:error, :not_found}

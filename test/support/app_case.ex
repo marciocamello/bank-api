@@ -8,9 +8,9 @@ defmodule BankApi.AppCase do
   using do
     quote do
       alias BankApi.Repo
-      alias BankApi.Models.Customers
+      alias BankApi.Models.Users
       alias BankApi.Models.Transactions
-      alias BankApi.Schemas.Customer
+      alias BankApi.Schemas.User
       alias BankApi.Schemas.Account
       alias BankApi.Auth.Guardian
       alias BankApi.Helpers.TranslateError

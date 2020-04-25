@@ -5,7 +5,7 @@ defmodule BankApi.Models.Transactions do
   import Ecto.Query, warn: false
   alias BankApi.Repo
   alias BankApi.Schemas.Transaction
-  alias BankApi.Models.Customers
+  alias BankApi.Models.Users
   alias BankApi.Models.Accounts
   alias BankApi.Auth.Guardian
 

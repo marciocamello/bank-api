@@ -4,149 +4,126 @@ defmodule BankApi.Controllers.User do
   """
   use Plug.Router
   alias BankApi.Repo
-  alias BankApi.Helpers.TranslateError
-  alias BankApi.Models.Customers
-  alias BankApi.Models.Transactions
-  alias BankApi.Router
   alias BankApi.Auth.Guardian
+  alias BankApi.Helpers.TranslateError
+  alias BankApi.Models.Users
+  alias BankApi.Router
 
   plug(:match)
+  plug(BankApi.Auth.Pipeline)
   plug(:dispatch)
 
   @doc """
-    Register a new customer account
+    Show account logged
   """
-  post "/register" do
-    %{"customer" => customer} = conn.body_params
-
-    case Customers.create_customer(customer) do
-      {:ok, _customer} ->
-        Customers.bind_account(_customer)
-        customer = Customers.get_customer(_customer.id)
-        Router.render_json(conn, %{message: "Customer created with success!", customer: customer})
-
-      {:error, _changeset} ->
-        Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
-    end
-  end
-
-  @doc """
-    show current account
-  """
-  get "/account" do
+  get "/" do
     token = Router.get_bearer_token(conn)
 
-    case Guardian.get_user_by_token(token) do
-      {:ok, customer} ->
-        Router.render_json(conn, %{message: "Customer viewed with success!", customer: customer})
+    if Guardian.is_admin(token) do
+      users =
+        Users.list_users()
+        |> Repo.preload(:accounts)
 
-      {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "Unauthorized"})
+      Router.render_json(conn, %{message: "User listed with success!", users: users})
+    else
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
   @doc """
-    Withdrawal money from your account
+    Create account route
   """
-  post "/withdrawal" do
+  post "/" do
     token = Router.get_bearer_token(conn)
 
-    case Guardian.get_user_by_token(token) do
-      {:ok, customer} ->
-        params =
-          conn.body_params
-          |> Map.put("customer", customer)
+    if Guardian.is_admin(token) do
+      %{"user" => user} = conn.body_params
 
-        case Transactions.Action.withdrawal(params) do
-          {:error, :zero_value} ->
-            Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
+      case Users.create_user(user) do
+        {:ok, _user} ->
+          Users.bind_account(_user)
+          user = Users.get_user(_user.id)
 
-          {:error, :unauthorized} ->
-            Router.render_json(conn, %{errors: "Invalid credentials"})
+          Router.render_json(conn, %{
+            message: "User created with success!",
+            user: user
+          })
 
-          {:error, :not_funds} ->
-            Router.render_json(conn, %{errors: "You don't have enough funds"})
-
-          {:info, _account} ->
-            Router.render_json(conn, %{message: "Please check your transation", result: _account})
-
-          {:ok, _result} ->
-            Router.render_json(conn, %{
-              message: "Successful withdrawal!",
-              result: %{
-                "email" => _result.customer.email,
-                "new_balance" => _result.balance
-              }
-            })
-        end
-
-      {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "Unauthorized"})
+        {:error, _changeset} ->
+          Router.render_json(conn, %{errors: TranslateError.pretty_errors(_changeset)})
+      end
+    else
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
   @doc """
-    Transfer money to other customer account
+    Show user logged by id
   """
-  post "/transfer" do
+  get "/:id" do
     token = Router.get_bearer_token(conn)
 
-    case Guardian.get_user_by_token(token) do
-      {:ok, customer} ->
-        params =
-          conn.body_params
-          |> Map.put("customer", customer)
+    if Guardian.is_admin(token) do
+      %{"id" => id} = conn.path_params
 
-        case Transactions.Action.transfer(params) do
-          {:error, :zero_value} ->
-            Router.render_json(conn, %{errors: "Value cannot be less than 0.00"})
+      case Users.get_user(id) do
+        nil ->
+          Router.render_json(conn, %{errors: "This user do not exist"})
 
-          {:error, :unauthorized} ->
-            Router.render_json(conn, %{errors: "Invalid credentials"})
-
-          {:error, :not_found} ->
-            Router.render_json(conn, %{errors: "Invalid account data"})
-
-          {:error, :not_funds} ->
-            Router.render_json(conn, %{errors: "You don't have enough funds"})
-
-          {:info, _account} ->
-            Router.render_json(conn, %{message: "Please check your transation", result: _account})
-
-          {:ok, _result} ->
-            Router.render_json(conn, %{
-              message: "Successful transfer!",
-              result: %{
-                "email" => _result.customer.email,
-                "new_balance" => _result.balance
-              }
-            })
-        end
-
-      {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "Unauthorized"})
+        user ->
+          Router.render_json(conn, %{message: "User viewed with success!", user: user})
+      end
+    else
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
   @doc """
-    Terminate customer account
+    Update user logged by id
   """
-  get "/terminate", assigns: %{an_option: :a_value} do
+  put "/:id" do
     token = Router.get_bearer_token(conn)
 
-    case Guardian.terminate_account(token) do
-      {:ok, _customer} ->
-        Router.render_json(conn, %{message: "Your account has been terminated"})
+    if Guardian.is_admin(token) do
+      %{"id" => id} = conn.path_params
+      %{"user" => params} = conn.body_params
 
-      {:error, :not_found} ->
-        Router.render_json(conn, %{errors: "You need authenticated to this action"})
+      case Users.get_user(id) do
+        nil ->
+          Router.render_json(conn, %{errors: "This user do not exist"})
+
+        user ->
+          Users.update_user(user, params)
+
+          Router.render_json(conn, %{
+            message: "User updated with success!",
+            user: user
+          })
+      end
+    else
+      Router.render_json(conn, %{errors: "Unauthorized"})
     end
   end
 
   @doc """
-    Default route to page not found
+    Delete user logged by id
   """
-  match _ do
-    Router.render_json(conn, %{message: "Page not found"}, 404)
+  delete "/:id" do
+    token = Router.get_bearer_token(conn)
+
+    if Guardian.is_admin(token) do
+      %{"id" => id} = conn.path_params
+
+      case Users.get_user(id) do
+        nil ->
+          Router.render_json(conn, %{errors: "This user do not exist"})
+
+        user ->
+          Users.delete_user(user)
+          Router.render_json(conn, %{message: "User deleted with success!"})
+      end
+    else
+      Router.render_json(conn, %{errors: "Unauthorized"})
+    end
   end
 end

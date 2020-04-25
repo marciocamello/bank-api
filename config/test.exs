@@ -10,7 +10,7 @@ config :bank_api, BankApi.Repo,
   database: "bank_api_test",
   username: "postgres",
   password: "postgres",
-  hostname: "bank-db",
+  hostname: "localhost",
   size: 1
 
 config :bank_api, ecto_repos: [BankApi.Repo]

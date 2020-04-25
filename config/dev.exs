@@ -9,7 +9,7 @@ config :bank_api, BankApi.Repo,
   database: "bank_api_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "bank-db"
+  hostname: "localhost"
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 

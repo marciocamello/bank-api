@@ -12,7 +12,7 @@ defmodule BankApi.Schemas.Account do
   """
   schema "accounts" do
     field(:balance, :decimal, default: 1000)
-    belongs_to(:customer, BankApi.Schemas.Customer)
+    belongs_to(:user, BankApi.Schemas.User)
 
     timestamps()
   end

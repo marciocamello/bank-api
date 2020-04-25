@@ -26,7 +26,7 @@ defmodule BankApi.Models.Accounts do
 
         {:info,
          %{
-           email: account.data.customer.email,
+           email: account.data.user.email,
            old_balance: account.data.balance,
            new_balance: account.changes.balance
          }}
@@ -34,7 +34,7 @@ defmodule BankApi.Models.Accounts do
   end
 
   @doc """
-    Update transfer operation to customer account
+    Update transfer operation to user account
 
   # Examples
       iex> alias BankApi.Models.Accounts
@@ -62,12 +62,12 @@ defmodule BankApi.Models.Accounts do
         {:info,
          %{
            from: %{
-             email: from.data.customer.email,
+             email: from.data.user.email,
              old_balance: from.data.balance,
              new_balance: from.changes.balance
            },
            to: %{
-             email: to.data.customer.email,
+             email: to.data.user.email,
              old_balance: to.data.balance,
              new_balance: to.changes.balance
            }

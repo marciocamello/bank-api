@@ -17,8 +17,8 @@ defmodule BankApi.Controllers.Auth do
     %{"email" => email, "password" => password} = conn.body_params
 
     case Guardian.authenticate(email, password) do
-      {:ok, customer, token} ->
-        Router.render_json(conn, %{message: "Login success!", customer: customer, token: token})
+      {:ok, user, token} ->
+        Router.render_json(conn, %{message: "Login success!", user: user, token: token})
 
       {:error, :unauthorized} ->
         Router.render_json(conn, %{errors: "Unauthorized"})

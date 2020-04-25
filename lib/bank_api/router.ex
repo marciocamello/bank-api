@@ -3,7 +3,7 @@ defmodule BankApi.Router do
     BankApi router context
   """
   use Plug.Router
-  alias BankApi.Controllers.{Auth, Customer, User, Transaction}
+  alias BankApi.Controllers.{Auth, User, Account, Transaction}
 
   plug(:match)
 
@@ -45,13 +45,13 @@ defmodule BankApi.Router do
   forward("/api/auth", to: Auth)
 
   @doc false
-  forward("/api/user", to: User)
+  forward("/api/account", to: Account)
 
   @doc false
   forward("/api/transactions", to: Transaction)
 
   @doc false
-  forward("/api/customers", to: Customer)
+  forward("/api/users", to: User)
 
   @doc false
   match _ do

@@ -6,7 +6,7 @@ defmodule BankApi.Api.TranbsactionTest do
   alias BankApi.Router
 
   # global fixtures
-  use BankApi.Fixtures, [:customer, :transaction]
+  use BankApi.Fixtures, [:user, :transaction]
 
   @opts Router.init([])
 
@@ -27,9 +27,9 @@ defmodule BankApi.Api.TranbsactionTest do
       assert %{"message" => "Page not found"} = Jason.decode!(conn.resp_body)
     end
 
-    # customers failed
+    # users failed
     test "GET transactions failed" do
-      {:ok, _, token} = create_customer_and_token()
+      {:ok, _, token} = create_user_and_token()
 
       conn =
         :post

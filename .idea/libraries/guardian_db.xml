@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="guardian_db" type="mix">
+    <CLASSES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/guardian_db/lib" />
+      <root url="file://$PROJECT_DIR$/deps/guardian_db/priv" />
+    </SOURCES>
+  </library>
+</component>
