@@ -27,3 +27,4 @@ bank_api-*.tar
 .idea
 
 rest-tools/swagger-local/node_modules
+rest-tools/swagger-prod/node_modules
