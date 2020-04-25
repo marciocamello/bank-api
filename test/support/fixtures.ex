@@ -39,24 +39,24 @@ defmodule BankApi.Fixtures do
       }
 
       @withdrawal_attrs %{
-        "value" => 10.00,
+        "value" => "10.00",
         "password_confirm" => false
       }
 
       @withdrawal_confirm_attrs %{
-        "value" => 10.00,
+        "value" => "10.00",
         "password_confirm" => @create_attrs.password
       }
 
       @transfer_attrs %{
         "account_to" => @create_attrs.email,
-        "value" => 10.00,
+        "value" => "10.00",
         "password_confirm" => false
       }
 
       @transfer_confirm_attrs %{
         "account_to" => @create_attrs.email,
-        "value" => 10.00,
+        "value" => "10.00",
         "password_confirm" => @create_attrs.password
       }
 

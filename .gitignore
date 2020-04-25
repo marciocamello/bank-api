@@ -25,3 +25,5 @@ bank_api-*.tar
 .elixir_ls
 
 .idea
+
+rest-tools/swagger-local/node_modules

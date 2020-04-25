@@ -64,7 +64,8 @@ defmodule BankApi.MixProject do
       {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
       {:guardian, "~> 2.0"},
       {:excoveralls, "~> 0.4", only: :test},
-      {:faker, "~> 0.13", only: :test}
+      {:faker, "~> 0.13", only: :test},
+      {:cors_plug, "~> 2.0"},
     ]
   end
 

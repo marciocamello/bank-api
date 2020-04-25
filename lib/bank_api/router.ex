@@ -13,6 +13,7 @@ defmodule BankApi.Router do
     json_decoder: Jason
   )
 
+  plug(CORSPlug)
   plug(:dispatch)
 
   @doc """

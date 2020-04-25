@@ -1,6 +1,6 @@
 # BankApi
 
-**This is a Stone Challenge, to propose financials logic API**
+This is a Stone Challenge, to propose financials logic API
 
 ## Development
 
@@ -31,10 +31,6 @@ Install dependencies
 docker exec -it bank-api mix deps.get
 ```
 
-Access api
-
-http://localhost:4000
-
 Run Tests
 
 ```shell script
@@ -49,6 +45,38 @@ access cover/coveralls.html
 ```
 
 ## Production
+
+## API Tools
+
+Swagger
+
+Insomnia
+
+```shell script
+cd rest-tools/swagger
+npm i or yarn
+access http://localhost:8080/docs
+```
+
+Import this file in insomnia
+
+```shell script
+rest-tools/insomnia.json
+```
+
+Postman
+
+Import this file in postman
+
+```shell script
+rest-tools/postman.json
+```
+
+API Docs
+
+```json
+
+```
 
 ## Deploy
 

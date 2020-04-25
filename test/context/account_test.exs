@@ -47,7 +47,7 @@ defmodule BankApi.Context.UserTest do
 
       params =
         @withdrawal_confirm_attrs
-        |> Map.put("value", 2000.00)
+        |> Map.put("value", "2000.00")
         |> Map.put("user", user)
 
       assert {:error, :not_funds} = Transactions.Action.withdrawal(params)
@@ -59,7 +59,7 @@ defmodule BankApi.Context.UserTest do
 
       params =
         @withdrawal_confirm_attrs
-        |> Map.put("value", 0.00)
+        |> Map.put("value", "0.00")
         |> Map.put("user", user)
 
       assert {:error, :zero_value} = Transactions.Action.withdrawal(params)
@@ -94,7 +94,7 @@ defmodule BankApi.Context.UserTest do
 
       params =
         @transfer_confirm_attrs
-        |> Map.put("value", 2000.00)
+        |> Map.put("value", "2000.00")
         |> Map.put("user", user)
 
       assert {:error, :not_funds} = Transactions.Action.transfer(params)
@@ -106,7 +106,7 @@ defmodule BankApi.Context.UserTest do
 
       params =
         @transfer_confirm_attrs
-        |> Map.put("value", 0.00)
+        |> Map.put("value", "0.00")
         |> Map.put("user", user)
 
       assert {:error, :zero_value} = Transactions.Action.transfer(params)

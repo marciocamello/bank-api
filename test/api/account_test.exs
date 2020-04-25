@@ -169,7 +169,7 @@ defmodule BankApi.Api.AccountTest do
 
       params =
         @withdrawal_confirm_attrs
-        |> Map.put("value", 2000.00)
+        |> Map.put("value", "2000.00")
 
       conn =
         :post
@@ -187,7 +187,7 @@ defmodule BankApi.Api.AccountTest do
 
       params =
         @withdrawal_confirm_attrs
-        |> Map.put("value", 0.00)
+        |> Map.put("value", "0.00")
 
       conn =
         :post
@@ -269,7 +269,7 @@ defmodule BankApi.Api.AccountTest do
 
       params =
         @transfer_confirm_attrs
-        |> Map.put("value", 2000.00)
+        |> Map.put("value", "2000.00")
 
       conn =
         :post
@@ -287,7 +287,7 @@ defmodule BankApi.Api.AccountTest do
 
       params =
         @transfer_confirm_attrs
-        |> Map.put("value", 0.00)
+        |> Map.put("value", "0.00")
 
       conn =
         :post

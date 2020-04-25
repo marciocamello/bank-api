@@ -1,0 +1,510 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0"
+  title: "BankAPI"
+  contact: {}
+host: "localhost:4000"
+basePath: "/api"
+tags:
+- name: "account"
+  description: ""
+- name: "users"
+  description: ""
+- name: "transactions"
+  description: ""
+schemes:
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /account/create:
+    post:
+      tags:
+      - "account"
+      summary: "create"
+      description: ""
+      operationId: "create"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/createRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      deprecated: false
+      x-swagger-router-controller: "Account"
+  /auth/login:
+    post:
+      tags:
+      - "account"
+      summary: "login"
+      description: ""
+      operationId: "login"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/loginRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      deprecated: false
+      x-swagger-router-controller: "Account"
+  /account/index:
+    get:
+      tags:
+      - "account"
+      summary: "current account"
+      description: ""
+      operationId: "currentaccount"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Account"
+  /account/withdrawal:
+    post:
+      tags:
+      - "account"
+      summary: "withdrawal"
+      description: ""
+      operationId: "withdrawal"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/withdrawalRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Account"
+  /account/transfer:
+    post:
+      tags:
+      - "account"
+      summary: "transfer"
+      description: ""
+      operationId: "transfer"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/transferRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Account"
+  /account/terminate:
+    get:
+      tags:
+      - "account"
+      summary: "terminate"
+      description: ""
+      operationId: "terminate"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Account"
+  /users:
+    get:
+      tags:
+      - "users"
+      summary: "list user"
+      description: ""
+      operationId: "listuser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Users"
+    post:
+      tags:
+      - "users"
+      summary: "create user"
+      description: ""
+      operationId: "createuser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/createuserRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Users"
+  /users/3:
+    get:
+      tags:
+      - "users"
+      summary: "show user"
+      description: ""
+      operationId: "showuser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Users"
+    put:
+      tags:
+      - "users"
+      summary: "update user"
+      description: ""
+      operationId: "updateuser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/updateuserRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Users"
+  /users/4:
+    delete:
+      tags:
+      - "users"
+      summary: "terminate user"
+      description: ""
+      operationId: "terminateuser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Users"
+  /transactions/report:
+    post:
+      tags:
+      - "transactions"
+      summary: "filter transactions"
+      description: ""
+      operationId: "filtertransactions"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+        default: "Bearer {token}"
+      - in: "body"
+        name: "Body"
+        required: true
+        schema:
+          $ref: "#/definitions/filtertransactionsRequest"
+      - name: "Content-Type"
+        in: "header"
+        required: true
+        type: "string"
+        default: "application/json"
+      responses:
+        "200":
+          description: ""
+          headers: {}
+          schema:
+            type: "object"
+      security:
+      - Bearer: []
+      deprecated: false
+      x-swagger-router-controller: "Transactions"
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  createRequest:
+    type: "object"
+    required:
+    - "user"
+    properties:
+      user:
+        type: "object"
+        properties: {}
+    title: "createRequest"
+    example:
+      user:
+        email: "rayanedovale@gmail.com"
+        firstName: "Rayane"
+        lastName: "do Vale"
+        phone: "37 98406 2829"
+        password: "123123123"
+        acl: "user"
+  loginRequest:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+    title: "loginRequest"
+    example:
+      email: "admin@gmail.com"
+      password: "123123123"
+  withdrawalRequest:
+    type: "object"
+    required:
+    - "password_confirm"
+    - "value"
+    properties:
+      value:
+        type: "number"
+        format: "double"
+      password_confirm:
+        type: "string"
+    title: "withdrawalRequest"
+    example:
+      value: "10.00"
+      password_confirm: "123123123"
+  transferRequest:
+    type: "object"
+    required:
+    - "account_to"
+    - "password_confirm"
+    - "value"
+    properties:
+      account_to:
+        type: "string"
+      value:
+        type: "number"
+        format: "double"
+      password_confirm:
+        type: "string"
+    title: "transferRequest"
+    example:
+      account_to: "rayanedovale@gmail.com"
+      value: "10.00"
+      password_confirm: "123123123"
+  createuserRequest:
+    type: "object"
+    required:
+    - "user"
+    properties:
+      user:
+        type: "object"
+        properties: {}
+    title: "createuserRequest"
+    example:
+      user:
+        email: "teste@gmail.com"
+        firstName: "Admin"
+        lastName: "Softawre"
+        phone: "37 98406 2829"
+        password: "123123123"
+        acl: "admin"
+  updateuserRequest:
+    type: "object"
+    required:
+    - "user"
+    properties:
+      user:
+        type: "object"
+        properties: {}
+    title: "updateuserRequest"
+    example:
+      user:
+        email: "admin@gmail.com"
+        firstName: "Admin"
+        lastName: "Software"
+        phone: "37 98406 2829"
+        password: "123123123"
+        acl: "admin"
+  filtertransactionsRequest:
+    type: "object"
+    required:
+    - "filter"
+    - "period"
+    - "type"
+    properties:
+      filter:
+        type: "string"
+      type:
+        type: "string"
+      period:
+        type: "string"
+    title: "filtertransactionsRequest"
+    example:
+      filter: ""
+      type: ""
+      period: ""

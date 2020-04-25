@@ -138,6 +138,7 @@ defmodule BankApi.Models.Transactions.Action do
 
   @doc false
   defp check_value(value) do
+    value = String.to_float(value)
     case Decimal.equal?(Decimal.from_float(value), 0) do
       true ->
         {:error, :zero_value}
