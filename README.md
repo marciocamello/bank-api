@@ -16,7 +16,7 @@ Docker deploy
 ```shell script
 cd docker/dev
 docker volume create bank_data
-docker-compose up -d
+docker-compose up -d && docker logs banl-api -f
 ```
 
 Run Tests
