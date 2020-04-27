@@ -8,12 +8,12 @@ config :bank_api,
 config :bank_api,
        BankApi.Repo,
        url: System.get_env("DATABASE_URL"),
-       ssl: true #comment this is to release
+       ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 
 # cowboy config
-config :bank_api, cowboy_port: System.get_env("PORT") || 4001
+config :bank_api, cowboy_port: System.get_env("PORT")
 
 # Configures Elixir's Logger
 config :logger,
