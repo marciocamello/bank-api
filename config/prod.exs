@@ -11,7 +11,6 @@ config :bank_api,
        show_sensitive_data_on_connection_error: true,
        pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5"),
        url: System.get_env("DATABASE_URL"),
-       database: false,
        ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
