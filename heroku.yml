@@ -4,6 +4,8 @@ build:
 release:
   image: web
   command:
+    - POOL_SIZE=2 mix ecto.create
     - POOL_SIZE=2 mix ecto.migrate
+    - POOL_SIZE=2 mix ecto.seed
 run:
   web: bin/bank_api start
