@@ -7,10 +7,11 @@ config :bank_api,
 # BankApi repo
 config :bank_api,
        BankApi.Repo,
-       database: System.get_env("DB_DATABASE") || "bank_api_repo",
-       username: System.get_env("DB_USERNAME") || "postgres",
-       password: System.get_env("DB_PASSWORD") || "postgres",
-       hostname: System.get_env("DB_HOSTNAME") || "bank-db"
+       adapter: Ecto.Adapters.Postgres,
+       show_sensitive_data_on_connection_error: true,
+       pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5"),
+       url: System.get_env("DATABASE_URL"),
+       ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 
