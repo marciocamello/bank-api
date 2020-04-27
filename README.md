@@ -57,22 +57,16 @@ Inside project follow this commands
 heroku login
 ```
 
-First Push
+Create App
 
 ```shell script
-git push heroku master && heroku open
+heroku create stone-bank-api
 ```
 
 Add elixir build to project
 
 ```shell script
-heroku buildpacks:set https://github.com/HashNuke/heroku-buildpack-elixir
-```
-
-Create App
-
-```shell script
-heroku create stone-bank-api
+heroku buildpacks:set hashnuke/elixir
 ```
 
 Create PostgreSQL instance
