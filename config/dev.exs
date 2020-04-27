@@ -6,7 +6,6 @@ config :bank_api,
 
 # BankApi repo
 config :bank_api,
-       adapter: Ecto.Adapters.Postgres,
        BankApi.Repo,
        database: System.get_env("DB_DATABASE") || "bank_api_repo",
        username: System.get_env("DB_USERNAME") || "postgres",
