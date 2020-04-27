@@ -69,6 +69,12 @@ Create PostgreSQL instance
 heroku addons:create heroku-postgresql:hobby-dev
 ```
 
+Setup environment
+
+```shell script
+heroku config:set MIX_ENV=prod
+```
+
 Migrate database
 
 ```shell script
@@ -81,12 +87,6 @@ Push project
 
 ```shell script
 git push heroku master
-```
-
-Setup environment
-
-```shell script
-heroku config:set MIX_ENV=prod
 ```
 
 ## Tests and Coveralls

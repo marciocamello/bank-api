@@ -7,7 +7,8 @@ config :bank_api,
 # BankApi repo
 config :bank_api,
        BankApi.Repo,
-       url: System.get_env("DATABASE_URL"),
+       adapter: Ecto.Adapters.Postgres,
+       url: "postgres://cnlairxqwucnqq:94f93233b5a47e51bffd7bf7f72c13156ee7d72705a20ccc24ba22454a227f20@ec2-54-81-37-115.compute-1.amazonaws.com:5432/dcq2aksoqjive5",
        ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
