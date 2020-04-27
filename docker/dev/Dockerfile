@@ -26,7 +26,7 @@ RUN rm -rf /var/cache/* \
     && rm -rf /tmp/*
 
 COPY entrypoint.sh /root/entrypoint.sh
-RUN chown +x /root/entrypoint.sh
+RUN chown root:root /root/entrypoint.sh
 
 # START
 CMD [ "bash", "-c", "/root/entrypoint.sh" ]

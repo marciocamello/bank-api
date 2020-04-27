@@ -1,6 +1,6 @@
 # BankApi
 
-This is a Stone Challenge, to propose financials logic API
+This is a Stone Challenge, to propose financial logic API
 
 ## Development
 
@@ -19,20 +19,7 @@ docker volume create bank_data
 docker-compose up -d && docker logs bank-api -f
 ```
 
-Run Tests
-
-```shell script
-docker exec -it bank-api mix test
-```
-
-Run Coveralls
-
-```shell script
-docker exec -it bank-api bash -c "MIX_ENV=test mix coveralls.html"
-access cover/coveralls.html
-```
-
-## Production
+## Release
 
 **Docker Release**
 
@@ -57,15 +44,43 @@ docker exec -it bank-api sh -c 'bin/bank_api eval "BankApi.Release.migrate"'
 docker exec -it bank-api sh -c 'bin/bank_api eval "BankApi.Release.seed"'
 ```
 
+## Production
+
 **Heroku**
+[https://devcenter.heroku.com/articles/heroku-cli](https://devcenter.heroku.com/articles/heroku-cli)
 
 Login Account
 
+Inside project follow this commands 
+
+```shell script
+heroku login
+```
+
 First Push
+
+```shell script
+git push heroku master && heroku open
+```
+
+Add elixir build to project
+
+```shell script
+heroku buildpacks:set https://github.com/HashNuke/heroku-buildpack-elixir
+```
 
 Create App
 
+```shell script
+heroku create stone-bank-api
+```
+
 Create PostgreSQL instance
+
+```shell script
+heroku addons:create heroku-postgresql:hobby-dev
+heroku addons:create heroku-postgresql:stone-bank-api
+```
 
 Migrate database
 
@@ -77,6 +92,27 @@ Push project
 
 ```shell script
 git push heroku master
+```
+
+Setup environment
+
+```shell script
+heroku config:set MIX_ENV=prod
+```
+
+## Tests and Coveralls
+
+Run Tests
+
+```shell script
+docker exec -it bank-api mix test
+```
+
+Run Coveralls
+
+```shell script
+docker exec -it bank-api bash -c "MIX_ENV=test mix coveralls.html"
+access cover/coveralls.html
 ```
 
 ## API Tools
@@ -97,7 +133,9 @@ rest-tools/postman.json
 
 API Docs
 
-- Endpoint `http://localhost:4000/api`
+- Endpoint Development `http://localhost:4000/api`
+- Endpoint Release `http://localhost:4001/api`
+- Endpoint Production `https://marcio-bank-api.herokuapp.com/api`
 
 **Fallback route**
 
