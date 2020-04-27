@@ -26,7 +26,7 @@ docker-compose up -d && docker logs bank-api -f
 Build image
 
 ```shell script
-docker build -f docker/prod/Dockerfile . --tag bank-api-release:latest
+docker build -f Dockerfile . --tag bank-api-release:latest
 ```
 
 Run container
