@@ -9,6 +9,7 @@ config :bank_api,
        BankApi.Repo,
        adapter: Ecto.Adapters.Postgres,
        url: System.get_env("DATABASE_URL"),
+       database: "",
        ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
