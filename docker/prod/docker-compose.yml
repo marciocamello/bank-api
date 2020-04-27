@@ -2,29 +2,21 @@ version: "2"
 services:
   #APP
   app:
+    image: bank-api-release:0.1
     container_name: bank-api
     hostname: bank-api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: >
-      bash -c "mix deps.get --force
-      && mix ecto.setup
-      && mix utils.seed
-      && iex -S mix run --no-halt
-      "
     tty: true
     privileged: false
+    restart: always
     environment:
-      MIX_ENV: dev
+      MIX_ENV: prod
+      PORT: "4001"
       DB_USERNAME: "postgres"
       DB_PASSWORD: "postgres"
-      DB_DATABASE: "bank_api_repo"
+      DB_DATABASE: "bank_api"
       DB_HOSTNAME: "bank-db"
-    volumes:
-      - ../..:/app
     ports:
-      - "4000:4000"
+      - "4001:4001"
     networks:
       - bank-network
     depends_on:
@@ -41,6 +33,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      POSTGRES_DB: bank_api
     ports:
       - "5432:5432"
     networks:

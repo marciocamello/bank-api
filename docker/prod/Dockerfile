@@ -1,35 +1,57 @@
-# IMAGe
-FROM elixir:1.10
+# BUILD
+# IMAGE
+FROM elixir:1.10-alpine as build
 
 # MAINTAINER
 LABEL Maintainer="Marcio Camello <mac3designer@gmail.com>" \
       Description="BankAPI Elixir image with Phoenix Framework"
 
 # ADDING DEPENDENCIES
-RUN apt-get update && apt-get install git inotify-tools make gcc libc-dev -y
+RUN apk add --no-cache build-base npm git python
+
+# BUILD DIR
+WORKDIR /app
+
+# INSTALL HEX + REBAR
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
 # MIX ENVIRONMENT
 ENV MIX_ENV=prod
 
-# APPLICATION DIRECTORY
-RUN mkdir /app
-WORKDIR /app
-
 # INSTALL MIX DEPENDENCIES
-RUN mix local.hex --force && \
-    mix local.rebar --force
+RUN pwd
+COPY mix.exs mix.lock ./
+COPY config config
+RUN mix do deps.get, deps.compile
 
-RUN mix deps.compile && \
-    mix release --overwrite --quiet
+# COPY PRIV AND LIB
+COPY priv priv
+COPY lib lib
 
-# PORT
-ENV REPLACE_OS_VARS=true
-ENV HTTP_PORT=4000 BEAM_PORT=14000 ERL_EPMD_PORT=24000
-EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
+# COMPILE RELEASE
+RUN mix do compile, release
 
 # CLEAR CACHE
 RUN rm -rf /var/cache/* \
     && rm -rf /tmp/*
 
-# START
-CMD [ "_build/prod/rel/bank_api/bin/", "start" ]
+# DEPLOY RELEASE IMAGE
+FROM alpine:3.9 AS app
+RUN apk add --no-cache openssl ncurses-libs
+
+WORKDIR /app
+RUN chown nobody:nobody /app
+
+USER nobody:nobody
+
+COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bank_api ./
+
+ENV HOME=/app
+
+# PORT
+ENV REPLACE_OS_VARS=true
+ENV HTTP_PORT=4001 BEAM_PORT=14001 ERL_EPMD_PORT=24001
+EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
+
+CMD ["bin/bank_api", "start"]

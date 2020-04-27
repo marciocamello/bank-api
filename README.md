@@ -16,7 +16,7 @@ Docker deploy
 ```shell script
 cd docker/dev
 docker volume create bank_data
-docker-compose up -d && docker logs banl-api -f
+docker-compose up -d && docker logs bank-api -f
 ```
 
 Run Tests
@@ -34,13 +34,30 @@ access cover/coveralls.html
 
 ## Production
 
+**Docker Release**
 
+Build image
 
-## Deploy
+```shell script
+docker build -f docker/prod/Dockerfile . --tag bank-api-release:latest
+```
 
-Docker Release
+Run container
 
-Heroku
+```shell script
+cd docker/prod
+docker volume create bank_data
+docker-compose up -d && docker logs bank-api -f
+```
+
+Run migrate and seed
+
+```shell script
+docker exec -it bank-api sh -c 'bin/bank_api eval "BankApi.Release.migrate"'
+docker exec -it bank-api sh -c 'bin/bank_api eval "BankApi.Release.seed"'
+```
+
+**Heroku**
 
 Login Account
 
@@ -63,14 +80,6 @@ git push heroku master
 ```
 
 ## API Tools
-
-Swagger
-
-```shell script
-cd rest-tools/swagger
-npm i or yarn
-access http://localhost:8080/docs
-```
 
 Import this file in Insomnia
 [https://insomnia.rest/](https://insomnia.rest/)
