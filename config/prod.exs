@@ -7,11 +7,8 @@ config :bank_api,
 # BankApi repo
 config :bank_api,
        BankApi.Repo,
-       database: System.get_env("DB_DATABASE") || "bank_api",
-       username: System.get_env("DB_USERNAME") || "postgres",
-       password: System.get_env("DB_PASSWORD") || "postgres",
-       hostname: System.get_env("DB_HOSTNAME") || "bank-db"
-#ssl: true
+       url: System.get_env("DATABASE_URL") || "postgres://postgres:postgres@bank-db:5432/bank_api",
+       ssl: true #uncomment this is a heroku/gigalixir deploy
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 

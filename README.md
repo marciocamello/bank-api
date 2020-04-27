@@ -60,26 +60,21 @@ heroku login
 Create App
 
 ```shell script
-heroku create stone-bank-api
-```
-
-Add elixir build to project
-
-```shell script
-heroku buildpacks:set hashnuke/elixir
+heroku create stone-bank-api --buildpack hashnuke/elixir
 ```
 
 Create PostgreSQL instance
 
 ```shell script
 heroku addons:create heroku-postgresql:hobby-dev
-heroku addons:create heroku-postgresql:stone-bank-api
 ```
 
 Migrate database
 
 ```shell script
+heroku run "POOL_SIZE=2 mix ecto.create"
 heroku run "POOL_SIZE=2 mix ecto.migrate"
+heroku run "POOL_SIZE=2 mix utils.seed"
 ```
 
 Push project
