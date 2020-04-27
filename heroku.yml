@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: ./docker/prod/Dockerfile
+release:
+  image: web
+  command:
+    - POOL_SIZE=2 mix ecto.migrate
+run:
+  web: bin/bank_api start

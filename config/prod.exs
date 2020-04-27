@@ -7,11 +7,8 @@ config :bank_api,
 # BankApi repo
 config :bank_api,
        BankApi.Repo,
-       adapter: Ecto.Adapters.Postgres,
-       show_sensitive_data_on_connection_error: true,
-       pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5"),
        url: System.get_env("DATABASE_URL"),
-       database: "bank_api",
+       pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
        ssl: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
