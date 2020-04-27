@@ -51,6 +51,8 @@ ENV HOME=/app
 
 # PORT
 ARG MIX_ENV=prod
+ENV MIX_ENV=$MIX_ENV
 ARG DATABASE_URL=postgres://postgres:postgres@localhost/bank_api
+ENV MIX_ENV=$DATABASE_URL
 
 CMD ["bin/bank_api", "start"]
