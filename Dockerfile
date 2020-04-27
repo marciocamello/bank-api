@@ -50,8 +50,7 @@ COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bank_api ./
 ENV HOME=/app
 
 # PORT
-ENV REPLACE_OS_VARS=true
-ENV HTTP_PORT=4001 BEAM_PORT=14001 ERL_EPMD_PORT=24001
-EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
+ARG MIX_ENV=prod
+ARG DATABASE_URL=postgres://postgres:postgres@localhost/bank_api
 
 CMD ["bin/bank_api", "start"]
