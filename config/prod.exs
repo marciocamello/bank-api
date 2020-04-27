@@ -7,8 +7,8 @@ config :bank_api,
 # BankApi repo
 config :bank_api,
        BankApi.Repo,
-       url: System.get_env("DATABASE_URL") || "postgres://postgres:postgres@bank-db:5432/bank_api",
-       ssl: true #uncomment this is a heroku/gigalixir deploy
+       url: System.get_env("DATABASE_URL"),
+       ssl: true #comment this is to release
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 
