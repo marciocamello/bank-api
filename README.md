@@ -123,7 +123,7 @@ API Docs
 
 - Endpoint Development `http://localhost:4000/api`
 - Endpoint Release `http://localhost:4001/api`
-- Endpoint Production `https://marcio-bank-api.herokuapp.com/api`
+- Endpoint Production `https://stone-bank-api.herokuapp.com/api`
 
 **Fallback route**
 
@@ -552,3 +552,4 @@ Errors
 {
   "errors": "You need authenticated to this action"
 }
+```
