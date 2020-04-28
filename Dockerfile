@@ -31,6 +31,7 @@ COPY lib lib
 
 # COMPILE RELEASE
 RUN mix do clean, compile --force
+RUN mix distillery.init
 RUN mix distillery.release
 
 # CLEAR CACHE
