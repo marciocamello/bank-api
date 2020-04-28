@@ -22,6 +22,7 @@ ENV MIX_ENV=prod
 # INSTALL MIX DEPENDENCIES
 RUN pwd
 COPY mix.exs mix.lock ./
+COPY mix.exs mix.lock ./
 COPY config config
 RUN mix deps.get
 
