@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.21.3">
+    <meta name="project" content="BankApi v0.1.0">
+    <title>BankApi.Models.Users — BankApi v0.1.0</title>
+    <link rel="stylesheet" href="dist/elixir-0ab8a6a80ebaaa287431.css" />
+    <script src="dist/sidebar_items-0b122b2147.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/app-a225d03098e64fef431a.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode') === 'true') document.body.className += ' night-mode'; } catch (e) { }</script>
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="https://gitlab.com/marcio-elixir/bank-api" class="sidebar-projectName">
+BankApi      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+      <a href="https://gitlab.com/marcio-elixir/bank-api">
+        <img src="assets/logo.png" alt="BankApi" class="sidebar-projectImage">
+      </a>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+      <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+        <small class="app-vsn">BankApi v0.1.0</small>
+BankApi.Models.Users          <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+      </h1>
+
+
+        <section id="moduledoc">
+<p>  Users model</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#bind_account/1">bind_account(user)</a>
+  </div>
+    <div class="summary-synopsis"><p>  Bind account to user</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create_user/1">create_user(attrs \\ %{})</a>
+  </div>
+    <div class="summary-synopsis"><p>  Create user</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_user/1">delete_user(user)</a>
+  </div>
+    <div class="summary-synopsis"><p>  Delete user from user instance</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_by_email/1">get_by_email(email)</a>
+  </div>
+    <div class="summary-synopsis"><p>  Get user from email</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_user/1">get_user(id)</a>
+  </div>
+    <div class="summary-synopsis"><p>  Get user from id</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list_users/0">list_users()</a>
+  </div>
+    <div class="summary-synopsis"><p>  List all users</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update_user/2">update_user(user, attrs)</a>
+  </div>
+    <div class="summary-synopsis"><p>  Update user from user instance</p></div>
+</div>
+  </div>
+        </section>
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="bind_account/1">
+  <div class="detail-header">
+    <a href="#bind_account/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">bind_account(user)</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L54" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  Bind account to user</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Users</span><span class="o">.</span><span class="n">get_user</span><span class="p" data-group-id="6039806903-1">(</span><span class="n">id</span><span class="p" data-group-id="6039806903-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Users</span><span class="o">.</span><span class="n">bind_account</span><span class="p" data-group-id="6039806903-2">(</span><span class="n">user</span><span class="p" data-group-id="6039806903-2">)</span><span class="w">
+</span><span class="p" data-group-id="6039806903-3">%</span><span class="nc" data-group-id="6039806903-3">BankApi.Schemas.Account</span><span class="p" data-group-id="6039806903-3">{</span><span class="p" data-group-id="6039806903-3">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="create_user/1">
+    <span id="create_user/0"></span>
+  <div class="detail-header">
+    <a href="#create_user/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">create_user(attrs \\ %{})</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L39" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  Create user</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Users</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="6448087398-1">(</span><span class="w">
+  </span><span class="p" data-group-id="6448087398-2">%{</span><span class="w">
+    </span><span class="s">&quot;email&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;email@email.com&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;firstName&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;firstName&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;lastName&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;lastName&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;phone&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;00 0000 0000&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;password&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;123456&quot;</span><span class="w">
+  </span><span class="p" data-group-id="6448087398-2">}</span><span class="w">
+</span><span class="p" data-group-id="6448087398-1">)</span><span class="w">
+</span><span class="p" data-group-id="6448087398-3">{</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6448087398-4">%</span><span class="nc" data-group-id="6448087398-4">BankApi.Schemas.User</span><span class="p" data-group-id="6448087398-4">{</span><span class="p" data-group-id="6448087398-4">}</span><span class="w"> </span><span class="p" data-group-id="6448087398-3">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="delete_user/1">
+  <div class="detail-header">
+    <a href="#delete_user/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">delete_user(user)</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L137" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  Delete user from user instance</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Users</span><span class="o">.</span><span class="n">get_user</span><span class="p" data-group-id="0670450420-1">(</span><span class="n">id</span><span class="p" data-group-id="0670450420-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Users</span><span class="o">.</span><span class="n">delete_user</span><span class="p" data-group-id="0670450420-2">(</span><span class="n">user</span><span class="p" data-group-id="0670450420-2">)</span><span class="w">
+</span><span class="p" data-group-id="0670450420-3">{</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0670450420-4">%</span><span class="nc" data-group-id="0670450420-4">BankApi.Schemas.User</span><span class="p" data-group-id="0670450420-4">{</span><span class="p" data-group-id="0670450420-4">}</span><span class="w"> </span><span class="p" data-group-id="0670450420-3">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="get_by_email/1">
+  <div class="detail-header">
+    <a href="#get_by_email/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_by_email(email)</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L114" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  Get user from email</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Users</span><span class="o">.</span><span class="n">get_by_email</span><span class="p" data-group-id="2718246937-1">(</span><span class="w">
+  </span><span class="s">&quot;email@email.com&quot;</span><span class="w">
+</span><span class="p" data-group-id="2718246937-1">)</span><span class="w">
+</span><span class="p" data-group-id="2718246937-2">{</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2718246937-3">%</span><span class="nc" data-group-id="2718246937-3">BankApi.Schemas.User</span><span class="p" data-group-id="2718246937-3">{</span><span class="p" data-group-id="2718246937-3">}</span><span class="w"> </span><span class="p" data-group-id="2718246937-2">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="get_user/1">
+  <div class="detail-header">
+    <a href="#get_user/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_user(id)</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L75" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  Get user from id</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Users</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="0235683670-1">(</span><span class="w">
+  </span><span class="p" data-group-id="0235683670-2">%{</span><span class="w">
+    </span><span class="s">&quot;email&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;email@email.com&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;firstName&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;firstName&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;lastName&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;lastName&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;phone&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;00 0000 0000&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;password&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;123456&quot;</span><span class="w">
+  </span><span class="p" data-group-id="0235683670-2">}</span><span class="w">
+</span><span class="p" data-group-id="0235683670-1">)</span><span class="w">
+</span><span class="p" data-group-id="0235683670-3">{</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0235683670-4">%</span><span class="nc" data-group-id="0235683670-4">BankApi.Schemas.User</span><span class="p" data-group-id="0235683670-4">{</span><span class="p" data-group-id="0235683670-4">}</span><span class="w"> </span><span class="p" data-group-id="0235683670-3">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="list_users/0">
+  <div class="detail-header">
+    <a href="#list_users/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">list_users()</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L19" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  List all users</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Users</span><span class="o">.</span><span class="n">list_users</span><span class="w">
+</span><span class="p" data-group-id="7071912625-1">[</span><span class="w"> </span><span class="p" data-group-id="7071912625-2">%</span><span class="nc" data-group-id="7071912625-2">BankApi.Schemas.User</span><span class="p" data-group-id="7071912625-2">{</span><span class="p" data-group-id="7071912625-2">}</span><span class="w"> </span><span class="p" data-group-id="7071912625-1">]</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="update_user/2">
+  <div class="detail-header">
+    <a href="#update_user/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">update_user(user, attrs)</h1>
+      <a href="https://gitlab.com/marcio-elixir/bank-api/blob/master/lib/bank_api/models/users.ex#L98" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+  </div>
+  <section class="docstring">
+<p>  Update user from user instance</p>
+<h1>Examples</h1>
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="kn">alias</span><span class="w"> </span><span class="nc">BankApi.Models.Users</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Users</span><span class="o">.</span><span class="n">get_user</span><span class="p" data-group-id="5027012418-1">(</span><span class="n">id</span><span class="p" data-group-id="5027012418-1">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Users</span><span class="o">.</span><span class="n">update_user</span><span class="p" data-group-id="5027012418-2">(</span><span class="w">
+  </span><span class="n">user</span><span class="p">,</span><span class="w">
+  </span><span class="p" data-group-id="5027012418-3">%{</span><span class="w">
+    </span><span class="s">&quot;email&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;new_email@email.com&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;firstName&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;New_firstName&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;lastName&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;New_lastName&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;phone&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;11 1111 1111&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="s">&quot;password&quot;</span><span class="w"> </span><span class="o">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;654321&quot;</span><span class="w">
+  </span><span class="p" data-group-id="5027012418-3">}</span><span class="w">
+</span><span class="p" data-group-id="5027012418-2">)</span><span class="w">
+</span><span class="p" data-group-id="5027012418-4">{</span><span class="w"> </span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5027012418-5">%</span><span class="nc" data-group-id="5027012418-5">BankApi.Schemas.User</span><span class="p" data-group-id="5027012418-5">{</span><span class="p" data-group-id="5027012418-5">}</span><span class="w"> </span><span class="p" data-group-id="5027012418-4">}</span></code></pre>
+  </section>
+</section>
+          </div>
+        </section>
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.21.3),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  </body>
+</html>
