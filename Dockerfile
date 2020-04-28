@@ -49,4 +49,9 @@ COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bank_api ./
 
 ENV HOME=/app
 
+# PORT
+ENV REPLACE_OS_VARS=true
+ENV HTTP_PORT=4000 BEAM_PORT=14000 ERL_EPMD_PORT=24000
+EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
+
 CMD ["bin/bank_api", "start"]
