@@ -11,6 +11,8 @@ services:
     privileged: false
     restart: on-failure
     env_file:
-        - .env
+      - .env
+    volumes:
+      - .:/app
     ports:
       - "4001:4001"

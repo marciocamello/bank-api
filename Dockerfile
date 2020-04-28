@@ -1,68 +1,35 @@
-# The version of Alpine to use for the final image
-# This should match the version of Alpine that the `elixir:1.7.2-alpine` image uses
-ARG ALPINE_VERSION=3.9
-
-FROM elixir:1.10-alpine AS builder
+# IMAGe
+FROM elixir:1.10
 
 # MAINTAINER
 LABEL Maintainer="Marcio Camello <mac3designer@gmail.com>" \
       Description="BankAPI Elixir image with Phoenix Framework"
 
-# The following are build arguments used to change variable parts of the image.
-# The name of your application/release (required)
-ARG APP_NAME
-# The version of the application we are building (required)
-ARG APP_VSN
-# The environment to build with
-ARG MIX_ENV=prod
+# ADDING DEPENDENCIES
+RUN apt-get update && apt-get install git inotify-tools make gcc libc-dev -y
 
-ENV APP_NAME=${APP_NAME} \
-    APP_VSN=${APP_VSN} \
-    MIX_ENV=${MIX_ENV}
+# MIX_ENV
+ENV MIX_ENV=prod
 
-# By convention, /opt is typically used for applications
-WORKDIR /opt/app
+# APPLICATION DIRECTORY
+RUN mkdir /app
+WORKDIR /app
 
-# This step installs all the build tools we'll need
-RUN apk update && \
-  apk upgrade --no-cache && \
-  apk add --no-cache \
-    nodejs \
-    yarn \
-    git \
-    build-base && \
-  mix local.rebar --force && \
-  mix local.hex --force
+# INSTALL MIX DEPENDENCIES
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
-# This copies our app source code into the build container
-COPY . .
+# PORT
+ENV REPLACE_OS_VARS=true
+ENV HTTP_PORT=4001 BEAM_PORT=14001 ERL_EPMD_PORT=24001
+EXPOSE $HTTP_PORT $BEAM_PORT $ERL_EPMD_PORT
 
-RUN mix do deps.get, deps.compile, compile
+# CLEAR CACHE
+RUN rm -rf /var/cache/* \
+    && rm -rf /tmp/*
 
-RUN \
-  mkdir -p /opt/built && \
-  mix distillery.release --verbose && \
-  cp _build/${MIX_ENV}/rel/${APP_NAME}/releases/${APP_VSN}/${APP_NAME}.tar.gz /opt/built && \
-  cd /opt/built && \
-  tar -xzf ${APP_NAME}.tar.gz && \
-  rm ${APP_NAME}.tar.gz
+COPY entrypoint.sh /root/entrypoint.sh
+RUN chmod +x /root/entrypoint.sh
 
-# From this line onwards, we're in a new image, which will be the image used in production
-FROM alpine:${ALPINE_VERSION}
-
-# The name of your application/release (required)
-ARG APP_NAME
-
-RUN apk update && \
-    apk add --no-cache \
-      bash \
-      openssl-dev
-
-ENV REPLACE_OS_VARS=true \
-    APP_NAME=${APP_NAME}
-
-WORKDIR /opt/app
-
-COPY --from=builder /opt/built .
-
-CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} foreground
+# START
+CMD [ "bash", "-c", "/root/entrypoint.sh" ]
