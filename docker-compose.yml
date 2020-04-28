@@ -2,17 +2,15 @@ version: "2"
 services:
   #APP
   app:
-    image: bank-api-release:0.1
+    build: .
     container_name: bank-api
     hostname: bank-api
     tty: true
     privileged: false
-    restart: always
-    environment:
-      MIX_ENV: prod
-      PORT: "4001"
-      DATABASE_URL: "postgres://postgres:postgres@bank-db:5432/bank_api"
-      DATABASE_SSL: false
+    restart: on-failure
+    env_file: .env
+    volumes:
+      - .:/app
     ports:
       - "4001:4001"
     networks:
@@ -25,7 +23,7 @@ services:
     container_name: bank-db
     hostname: bank-db
     image: postgres
-    restart: always
+    restart: on-failure
     volumes:
       - "bank_data:/var/lib/postgres"
     environment:
