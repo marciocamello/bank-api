@@ -1,55 +1,75 @@
 # BUILD
 # IMAGE
-FROM elixir:1.10-alpine as build
+FROM elixir:1.10-alpine as builder
+
+# ALPINE VERSION
+ARG ALPINE_VERSION=3.9
+
+# ARGS
+ARG APP_NAME
+ARG APP_VSN
+ARG DATABASE_URL
+ARG MIX_ENV=prod
+
+# ENVS
+ENV APP_NAME=${APP_NAME} \
+    APP_VSN=${APP_VSN} \
+    DATABASE_URL=${DATABASE_URL} \
+    MIX_ENV=${MIX_ENV}
 
 # MAINTAINER
 LABEL Maintainer="Marcio Camello <mac3designer@gmail.com>" \
       Description="BankAPI Elixir image with Phoenix Framework"
 
 # ADDING DEPENDENCIES
-RUN apk add --no-cache build-base npm git python
+RUN apk update && \
+  apk upgrade --no-cache && \
+  apk add --no-cache \
+    nodejs \
+    yarn \
+    git \
+    build-base && \
+  mix local.rebar --force && \
+  mix local.hex --force
 
 # BUILD DIR
-WORKDIR /app
+WORKDIR /opt/app
+
+# COPY FILES
+COPY . .
 
 # INSTALL HEX + REBAR
-RUN mix local.hex --if-missing --force && \
-    mix local.rebar --force
+RUN mix do deps.get, deps.compile, compile
 
 # MIX ENVIRONMENT
-ENV MIX_ENV=prod
-
-# INSTALL MIX DEPENDENCIES
-RUN pwd
-COPY mix.exs mix.lock ./
-COPY mix.exs mix.lock ./
-COPY config config
-RUN mix deps.get
-
-# COPY PRIV AND LIB
-COPY priv priv
-COPY lib lib
-
-# COMPILE RELEASE
-RUN mix do clean, compile --force
-RUN mix distillery.init
-RUN mix distillery.release
+RUN \
+  mkdir -p /opt/built && \
+  mix distillery.release --verbose && \
+  cp _build/${MIX_ENV}/rel/${APP_NAME}/releases/${APP_VSN}/${APP_NAME}.tar.gz /opt/built && \
+  cd /opt/built && \
+  tar -xzf ${APP_NAME}.tar.gz && \
+  rm ${APP_NAME}.tar.gz
 
 # CLEAR CACHE
 RUN rm -rf /var/cache/* \
     && rm -rf /tmp/*
 
 # DEPLOY RELEASE IMAGE
-FROM alpine:3.9 AS app
-RUN apk add --no-cache openssl ncurses-libs
+FROM alpine:${ALPINE_VERSION}
 
-WORKDIR /app
-RUN chown nobody:nobody /app
+ARG APP_NAME
 
-USER nobody:nobody
+RUN apk update && \
+    apk add --no-cache \
+      bash \
+      openssl-dev
 
-COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bank_api ./
+ENV REPLACE_OS_VARS=true \
+    APP_NAME=${APP_NAME} \
+    DATABASE_URL=${DATABASE_URL}
 
-ENV HOME=/app
+WORKDIR /opt/app
 
-CMD ["bin/bank_api", "foreground"]
+COPY --from=builder /opt/built .
+
+CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} foreground
