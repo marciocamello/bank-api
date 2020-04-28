@@ -13,7 +13,7 @@ defmodule BankApi.Controllers.Transaction do
   plug(:dispatch)
 
   @doc """
-    Show total transactions
+    Show transactions reports
   """
   post "/report" do
     token = Router.get_bearer_token(conn)

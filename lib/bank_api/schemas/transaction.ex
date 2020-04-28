@@ -5,7 +5,7 @@ defmodule BankApi.Schemas.Transaction do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:account_from, :account_to, :value, :inserted_at]}
+  @derive {Jason.Encoder, only: [:account_from, :account_to, :value, :inserted_at, :type]}
 
   @doc """
     Table schema

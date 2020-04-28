@@ -78,9 +78,9 @@ heroku config:set MIX_ENV=prod
 Migrate database
 
 ```shell script
-heroku run "POOL_SIZE=2 mix ecto.create"
-heroku run "POOL_SIZE=2 mix ecto.migrate"
-heroku run "POOL_SIZE=2 mix utils.seed"
+heroku run "MIX_ENV=prod POOL_SIZE=2 mix ecto.create"
+heroku run "MIX_ENV=prod POOL_SIZE=2 mix ecto.migrate"
+heroku run "MIX_ENV=prod POOL_SIZE=2 mix utils.seed"
 ```
 
 Push project
@@ -101,7 +101,6 @@ Run Coveralls
 
 ```shell script
 docker exec -it bank-api bash -c "MIX_ENV=test mix coveralls.html"
-access cover/coveralls.html
 ```
 
 ## API Tools
@@ -135,6 +134,31 @@ Status 404
 ```json
 {
   "message": "Page not found"
+}
+```
+
+**Mock data**
+
+Admin
+```json
+{
+  "email": "albusdumbledore@hogwarts.com",
+  "password": "123123123"
+}
+```
+
+Users
+```json
+{
+  "email": "hermione@hogwarts.com",
+  "password": "123123123"
+}
+```
+
+```json
+{
+  "email": "harrypotter@hogwarts.com",
+  "password": "123123123"
 }
 ```
 
@@ -271,7 +295,7 @@ Withdrawal money from your account
   * `Authorization: Bearer TOKEN`
   * `Content-Type: application/json`
  
-Password confirmation is false 
+Password confirmation is false
 Body
 ```json
 {
@@ -421,3 +445,110 @@ You don't   have enough funds
   "errors": "You don't have enough funds"
 }
 ```
+
+### `GET /account/terminate
+
+User terminate account
+
+  * `Headers`
+  * `Authorization: Bearer TOKEN`
+  * `Content-Type: application/json`    
+  
+Response
+Status 200
+```json
+{
+  "message": "Your account has been terminated"
+}
+```
+
+Errors
+```json
+{
+  "errors": "You need authenticated to this action"
+}
+```
+
+**Dashboard**
+
+### `GET /transactions/report
+
+Show transactions reports
+
+  * `Headers`
+  * `Authorization: Bearer ADMIN_TOKEN` 
+  * `Content-Type: application/json`    
+  * `filter daily, monthly, yearly, empty`
+  * `type withdrawal, transfer`
+  * `period day, month, year`
+ 
+Body
+All transactions
+```json
+{
+	"filter": "",
+	"type": "",
+	"period": ""
+}
+```
+
+Per transaction type
+```json
+{
+	"filter": "",
+	"type": "withdrawal",
+	"period": ""
+}
+```
+
+Daily transactions
+```json
+{
+	"filter": "daily",
+	"type": "",
+	"period": "01"
+}
+```
+
+Monthly transactions
+```json
+{
+	"filter": "monthly",
+	"type": "",
+	"period": "04"
+}
+```
+
+Yearly transactions
+```json
+{
+	"filter": "yearly",
+	"type": "",
+	"period": "2020"
+}
+```
+ 
+Response
+Status 200
+```json
+{
+  "message": "All transactions",
+  "result": {
+    "total": "10.00",
+    "transactions": [
+      {
+        "account_from": "hermione@hogwarts.com",
+        "account_to": "hermione@hogwarts.com",
+        "value": "10.00",
+        "inserted_at": "2020-04-28T19:04:04"
+      }
+    ]
+  }
+}
+```
+
+Errors
+```json
+{
+  "errors": "You need authenticated to this action"
+}
