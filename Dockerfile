@@ -13,7 +13,7 @@ RUN apk add --no-cache build-base npm git python
 WORKDIR /app
 
 # INSTALL HEX + REBAR
-RUN mix local.hex --force && \
+RUN mix local.hex --if-missing --force && \
     mix local.rebar --force
 
 # MIX ENVIRONMENT
@@ -23,14 +23,14 @@ ENV MIX_ENV=prod
 RUN pwd
 COPY mix.exs mix.lock ./
 COPY config config
-RUN mix do deps.get, deps.compile
+RUN mix deps.get
 
 # COPY PRIV AND LIB
 COPY priv priv
 COPY lib lib
 
 # COMPILE RELEASE
-RUN mix do compile
+RUN mix do clean, compile --force
 RUN mix distillery.release
 
 # CLEAR CACHE
