@@ -2,14 +2,15 @@ version: "2"
 services:
   #APP
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: bank-api
     hostname: bank-api
     tty: true
     privileged: false
     restart: on-failure
-    env_file: .env
-    volumes:
-      - .:/app
+    env_file:
+        - .env
     ports:
       - "4001:4001"

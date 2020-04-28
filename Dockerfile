@@ -1,27 +1,29 @@
-# BUILD
-# IMAGE
-FROM elixir:1.10-alpine as builder
-
-# ALPINE VERSION
+# The version of Alpine to use for the final image
+# This should match the version of Alpine that the `elixir:1.7.2-alpine` image uses
 ARG ALPINE_VERSION=3.9
 
-# ARGS
-ARG APP_NAME
-ARG APP_VSN
-ARG DATABASE_URL
-ARG MIX_ENV=prod
-
-# ENVS
-ENV APP_NAME=${APP_NAME} \
-    APP_VSN=${APP_VSN} \
-    DATABASE_URL=${DATABASE_URL} \
-    MIX_ENV=${MIX_ENV}
+FROM elixir:1.10-alpine AS builder
 
 # MAINTAINER
 LABEL Maintainer="Marcio Camello <mac3designer@gmail.com>" \
       Description="BankAPI Elixir image with Phoenix Framework"
 
-# ADDING DEPENDENCIES
+# The following are build arguments used to change variable parts of the image.
+# The name of your application/release (required)
+ARG APP_NAME
+# The version of the application we are building (required)
+ARG APP_VSN
+# The environment to build with
+ARG MIX_ENV=prod
+
+ENV APP_NAME=${APP_NAME} \
+    APP_VSN=${APP_VSN} \
+    MIX_ENV=${MIX_ENV}
+
+# By convention, /opt is typically used for applications
+WORKDIR /opt/app
+
+# This step installs all the build tools we'll need
 RUN apk update && \
   apk upgrade --no-cache && \
   apk add --no-cache \
@@ -32,16 +34,11 @@ RUN apk update && \
   mix local.rebar --force && \
   mix local.hex --force
 
-# BUILD DIR
-WORKDIR /opt/app
-
-# COPY FILES
+# This copies our app source code into the build container
 COPY . .
 
-# INSTALL HEX + REBAR
 RUN mix do deps.get, deps.compile, compile
 
-# MIX ENVIRONMENT
 RUN \
   mkdir -p /opt/built && \
   mix distillery.release --verbose && \
@@ -50,13 +47,10 @@ RUN \
   tar -xzf ${APP_NAME}.tar.gz && \
   rm ${APP_NAME}.tar.gz
 
-# CLEAR CACHE
-RUN rm -rf /var/cache/* \
-    && rm -rf /tmp/*
-
-# DEPLOY RELEASE IMAGE
+# From this line onwards, we're in a new image, which will be the image used in production
 FROM alpine:${ALPINE_VERSION}
 
+# The name of your application/release (required)
 ARG APP_NAME
 
 RUN apk update && \
@@ -65,8 +59,7 @@ RUN apk update && \
       openssl-dev
 
 ENV REPLACE_OS_VARS=true \
-    APP_NAME=${APP_NAME} \
-    DATABASE_URL=${DATABASE_URL}
+    APP_NAME=${APP_NAME}
 
 WORKDIR /opt/app
 
