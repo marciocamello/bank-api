@@ -53,6 +53,6 @@ ENV HOME=/app
 ARG MIX_ENV=prod
 ENV MIX_ENV=$MIX_ENV
 ARG DATABASE_URL=postgres://postgres:postgres@bank-db/bank_api
-ENV MIX_ENV=$DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 
 CMD ["bin/bank_api", "start"]
