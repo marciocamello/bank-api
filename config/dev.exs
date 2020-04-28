@@ -10,7 +10,8 @@ config :bank_api,
        database: System.get_env("DB_DATABASE") || "bank_api_repo",
        username: System.get_env("DB_USERNAME") || "postgres",
        password: System.get_env("DB_PASSWORD") || "postgres",
-       hostname: System.get_env("DB_HOSTNAME") || "bank-db"
+       hostname: System.get_env("DB_HOSTNAME") || "bank-db",
+       show_sensitive_data_on_connection_error: true
 
 config :bank_api, ecto_repos: [BankApi.Repo]
 
