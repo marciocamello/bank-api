@@ -52,4 +52,4 @@ COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bank_api ./
 
 ENV HOME=/app
 
-CMD ["bin/bank_api", "start"]
+CMD ["bin/bank_api", "foreground"]
