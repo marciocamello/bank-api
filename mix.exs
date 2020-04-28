@@ -66,6 +66,7 @@ defmodule BankApi.MixProject do
       {:excoveralls, "~> 0.4", only: :test},
       {:faker, "~> 0.13"},
       {:cors_plug, "~> 2.0"},
+      {:distillery, "~> 2.1"}
     ]
   end
 

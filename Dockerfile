@@ -30,7 +30,8 @@ COPY priv priv
 COPY lib lib
 
 # COMPILE RELEASE
-RUN mix do compile, release
+RUN mix do compile
+RUN mix distillery.release
 
 # CLEAR CACHE
 RUN rm -rf /var/cache/* \
@@ -48,19 +49,5 @@ USER nobody:nobody
 COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bank_api ./
 
 ENV HOME=/app
-
-# PORT
-ARG MIX_ENV=prod
-ENV MIX_ENV=$MIX_ENV
-ARG DATABASE_URL=postgres://postgres:postgres@bank-db/bank_api
-ARG DB_DATABASE=bank_api
-ARG DB_USERNAME=postgres
-ARG DB_PASSWORD=postgres
-ARG DB_HOSTNAME=bank-db
-ENV DATABASE_URL=$DATABASE_URL
-ENV DB_DATABASE=$DB_DATABASE
-ENV DB_USERNAME=$DB_USERNAME
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_HOSTNAME=$DB_HOSTNAME
 
 CMD ["bin/bank_api", "start"]
