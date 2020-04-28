@@ -19,31 +19,6 @@ docker volume create bank_data
 docker-compose up -d && docker logs bank-api -f
 ```
 
-## Release
-
-**Docker Release**
-
-Build image
-
-```shell script
-docker build -f Dockerfile . --tag bank-api-release:latest
-```
-
-Run container
-
-```shell script
-cd docker/prod
-docker volume create bank_data
-docker-compose up -d && docker logs bank-api -f
-```
-
-Run migrate and seed
-
-```shell script
-docker exec -it bank-api sh -c 'bin/bank_api eval "BankApi.Release.migrate"'
-docker exec -it bank-api sh -c 'bin/bank_api eval "BankApi.Release.seed"'
-```
-
 ## Production
 
 **Heroku**
