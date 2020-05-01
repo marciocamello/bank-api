@@ -34,11 +34,15 @@ defmodule BankApi.Models.Transactions do
       }
   """
   def filter_transactions(filter, type, period) do
-    query =
-      filter_period(filter, period, type)
-      |> list_transactions
-
-    filtered_params(query)
+    case filter do
+      "" ->
+        list_transactions
+        |> filtered_params
+      _ ->
+          filter_period(filter, period, type)
+          |> list_transactions
+          |> filtered_params
+    end
   end
 
   @doc false
