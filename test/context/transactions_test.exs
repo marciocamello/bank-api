@@ -19,7 +19,12 @@ defmodule BankApi.Context.TransactionsTest do
         inserted_at:  date,
         updated_at:  date,
       }
-      assert {:ok, %{}} = Transactions.insert_transaction(transaction)
+      assert {:ok, %{}} = Transactions.create_transaction(transaction)
+    end
+
+    # insert transaction changeset null
+    test "Insert transaction changeset null" do
+      assert {:error, %{}} = Transactions.create_transaction()
     end
 
     # create user
@@ -37,14 +42,22 @@ defmodule BankApi.Context.TransactionsTest do
       seed_transfers(100)
 
       if assert Guardian.is_admin(token) == true do
-        %{
-          "filter" => filter,
-          "type" => type,
-          "period" => period
-        } = @all_attrs
-
         assert %{"total" => total, "transactions" => transactions} =
-                 Transactions.filter_transactions(filter, type, period)
+                 Transactions.filter_transactions("", "", "")
+      end
+    end
+
+    # list all transactions wrong filter
+    test "List all transactions wrong filter" do
+      assert {:ok, user} = create_admin()
+      assert {:ok, _, token} = auth_admin()
+
+      seed_withdrawal(100)
+      seed_transfers(100)
+
+      if assert Guardian.is_admin(token) == true do
+        assert %{"total" => total, "transactions" => transactions} =
+                 Transactions.filter_transactions("wrong_filter", "", "")
       end
     end
 
