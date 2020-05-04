@@ -7,6 +7,6 @@ defmodule BankApiTest.Seed.UsersTest do
   # test add_user function
   test "test add_user" do
     Faker.start()
-    assert {ok, %User{}} = Users.add_user()
+    assert %Account{} = Users.add_user()
   end
 end
