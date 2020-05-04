@@ -7,6 +7,21 @@ defmodule BankApi.Context.TransactionsTest do
   use BankApi.Fixtures, [:user, :transaction]
 
   describe "transactions" do
+    # insert transaction
+    test "Insert transaction" do
+      date = Faker.DateTime.between(~N[2019-05-05 00:00:00], ~N[2020-05-05 00:00:00])
+
+      transaction = %{
+        value: Enum.random(10..500) |> Integer.to_string,
+        account_from: Faker.Internet.email(),
+        account_to: Faker.Internet.email(),
+        type: "withdrawal",
+        inserted_at:  date,
+        updated_at:  date,
+      }
+      assert {:ok, %{}} = Transactions.insert_transaction(transaction)
+    end
+
     # create user
     test "Create admin account" do
       assert {:ok, user} = create_admin()
@@ -18,7 +33,8 @@ defmodule BankApi.Context.TransactionsTest do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
 
-      seed_transactions(10)
+      seed_withdrawal(100)
+      seed_transfers(100)
 
       if assert Guardian.is_admin(token) == true do
         %{
@@ -37,7 +53,8 @@ defmodule BankApi.Context.TransactionsTest do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
 
-      seed_transactions(10)
+      seed_withdrawal(100)
+      seed_transfers(100)
 
       if assert Guardian.is_admin(token) == true do
         %{
@@ -56,7 +73,8 @@ defmodule BankApi.Context.TransactionsTest do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
 
-      seed_transactions(10)
+      seed_withdrawal(100)
+      seed_transfers(100)
 
       if assert Guardian.is_admin(token) == true do
         %{
@@ -75,7 +93,8 @@ defmodule BankApi.Context.TransactionsTest do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
 
-      seed_transactions(10)
+      seed_withdrawal(100)
+      seed_transfers(100)
 
       if assert Guardian.is_admin(token) == true do
         %{

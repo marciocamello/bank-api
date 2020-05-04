@@ -90,13 +90,15 @@ defmodule BankApi.Fixtures do
       @doc false
       def create_users do
         {:ok, user} =
-          Users.create_user(%{
-            email: Faker.Internet.email(),
-            firstName: Faker.Name.PtBr.name(),
-            lastName: Faker.Name.PtBr.name(),
-            password: "123123123",
-            phone: Faker.Phone.EnUs.phone()
-          })
+          Users.create_user(
+            %{
+              email: Faker.Internet.email(),
+              firstName: Faker.Name.PtBr.name(),
+              lastName: Faker.Name.PtBr.name(),
+              password: "123123123",
+              phone: Faker.Phone.EnUs.phone()
+            }
+          )
 
         Users.bind_account(user)
       end
@@ -162,6 +164,7 @@ defmodule BankApi.Fixtures do
     alias BankApi.Models.Users
     alias BankApi.Models.Transactions
     alias BankApi.Schemas.User
+    alias BankApi.Schemas.Transaction
     alias BankApi.Auth.Guardian
 
     quote do
@@ -174,22 +177,6 @@ defmodule BankApi.Fixtures do
         acl: "admin"
       }
 
-      @account_to %{
-        email: "account_to@email.com",
-        firstName: "Test",
-        lastName: "Marcio",
-        phone: "37 98406 2829",
-        password: "123123123"
-      }
-
-      @account_from %{
-        email: "account_from@email.com",
-        firstName: "Test2",
-        lastName: "Andre",
-        phone: "37 98406 2829",
-        password: "123123123"
-      }
-
       @all_attrs %{
         "filter" => "",
         "type" => "",
@@ -199,19 +186,22 @@ defmodule BankApi.Fixtures do
       @daily_attrs %{
         "filter" => "daily",
         "type" => "",
-        "period" => Date.utc_today().day |> Integer.to_string()
+        "period" => Date.utc_today().day
+                    |> Integer.to_string()
       }
 
       @monthly_attrs %{
         "filter" => "monthly",
         "type" => "",
-        "period" => Date.utc_today().month |> Integer.to_string()
+        "period" => Date.utc_today().month
+                    |> Integer.to_string()
       }
 
       @yearly_attrs %{
         "filter" => "yearly",
         "type" => "",
-        "period" => Date.utc_today().year |> Integer.to_string()
+        "period" => Date.utc_today().year
+                    |> Integer.to_string()
       }
 
       @doc false
@@ -225,31 +215,31 @@ defmodule BankApi.Fixtures do
       end
 
       @doc false
-      defp create_withdrawal(user) do
-        params =
-          @withdrawal_confirm_attrs
-          |> Map.put("user", user)
-        Transactions.Action.withdrawal(params)
-      end
-
-      @doc false
-      defp create_transfer(user) do
-        params =
-          @transfer_confirm_attrs
-          |> Map.put("user", user)
-        Transactions.Action.transfer(params)
-      end
-
-      @doc false
-      def seed_transactions(count) do
-        {:ok, user} = create_user(@account_to)
-        bind_account(user)
-        user = get_user(user.id)
-
+      def withdrawal(count, type) do
         for n <- 1..count do
-          create_withdrawal(user)
-          create_transfer(user)
+          date = Faker.DateTime.between(~N[2019-05-05 00:00:00], ~N[2020-05-05 00:00:00])
+
+          transaction = %{
+            value: Enum.random(10..500) |> Integer.to_string,
+            account_from: Faker.Internet.email(),
+            account_to: Faker.Internet.email(),
+            type: type,
+            inserted_at:  date,
+            updated_at:  date,
+          }
         end
+      end
+
+      @doc false
+      def seed_withdrawal(count) do
+        withdrawal(count, "withdrawal")
+        |> Enum.map(fn transaction -> Transactions.insert_transaction(transaction) end)
+      end
+
+      @doc false
+      def seed_transfers(count) do
+        withdrawal(count, "transfer")
+        |> Enum.map(fn transaction -> Transactions.insert_transaction(transaction) end)
       end
     end
   end

@@ -32,7 +32,7 @@ defmodule BankApi.Context.UsersTest do
 
     # create user failed changeset
     test "Create user failed changeset" do
-      {:error, _changeset} = Users.create_user(%{})
+      {:error, _changeset} = Users.create_user()
     end
 
     # update user

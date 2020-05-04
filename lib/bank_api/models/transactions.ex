@@ -22,6 +22,20 @@ defmodule BankApi.Models.Transactions do
   end
 
   @doc """
+  Creates a Transaction.
+  ## Examples
+      iex> insert_transaction(%{field: value})
+      {:ok, %Transaction{}}
+      iex> create_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+  """
+  def insert_transaction(attrs) do
+    %Transaction{}
+    |> Transaction.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
     List all transactions and total
 
   # Examples

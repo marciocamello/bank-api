@@ -17,6 +17,20 @@ Docker deploy
 cd docker/dev
 docker volume create bank_data
 docker-compose up -d && docker logs bank-api -f
+docker exec -it bank-api bash -c "mix ecto.setup"
+docker exec -it bank-api bash -c "mix utils.seed"
+```
+
+Setup Database
+
+```shell script
+docker exec -it bank-api bash -c "mix ecto.setup"
+```
+
+Seed Database
+
+```shell script
+docker exec -it bank-api bash -c "mix utils.seed"
 ```
 
 ## Production
