@@ -160,6 +160,7 @@ defmodule BankApi.Fixtures do
   @doc false
   def transaction do
     alias BankApi.Models.Users
+    alias BankApi.Models.Transactions
     alias BankApi.Schemas.User
     alias BankApi.Auth.Guardian
 
@@ -208,16 +209,34 @@ defmodule BankApi.Fixtures do
       end
 
       @doc false
-      defp create_transactions(user) do
+      defp create_withdrawal(user) do
         params =
           @withdrawal_confirm_attrs
           |> Map.put("user", user)
+        Transactions.Action.withdrawal(params)
       end
 
       @doc false
-      def seed_transactions(user, list, count) do
+      def seed_withdrawal(count) do
+        {:ok, user} = create_user_and_authenticate()
         for n <- 1..count do
-          create_transactions(user)
+          create_withdrawal(user)
+        end
+      end
+
+      @doc false
+      defp create_transfer(user) do
+        params =
+          @transfer_confirm_attrs
+          |> Map.put("user", user)
+        Transactions.Action.transfer(params)
+      end
+
+      @doc false
+      def seed_transfers(count) do
+        {:ok, user} = create_user_and_authenticate_transfer()
+        for n <- 1..count do
+          create_transfer(user)
         end
       end
     end

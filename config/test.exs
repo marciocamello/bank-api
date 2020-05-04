@@ -7,10 +7,10 @@ config :bank_api,
 # BankApi repo
 config :bank_api, BankApi.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
-  database: System.get_env("DB_DATABASE") || "bank_api_test",
-  username: System.get_env("DB_USERNAME") || "postgres",
-  password: System.get_env("DB_PASSWORD") || "postgres",
-  hostname: System.get_env("DB_HOSTNAME") || "bank-db",
+  database: "bank_api_test",
+  username: "postgres",
+  password: "postgres",
+  hostname: "bank-db",
   size: 1
 
 config :bank_api, ecto_repos: [BankApi.Repo]
