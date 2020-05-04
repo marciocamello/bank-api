@@ -18,6 +18,8 @@ defmodule BankApi.Context.TransactionsTest do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
 
+      seed_transactions(10)
+
       if assert Guardian.is_admin(token) == true do
         %{
           "filter" => filter,
@@ -34,6 +36,8 @@ defmodule BankApi.Context.TransactionsTest do
     test "List daily transactions" do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
+
+      seed_transactions(10)
 
       if assert Guardian.is_admin(token) == true do
         %{
@@ -52,6 +56,8 @@ defmodule BankApi.Context.TransactionsTest do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
 
+      seed_transactions(10)
+
       if assert Guardian.is_admin(token) == true do
         %{
           "filter" => filter,
@@ -68,6 +74,8 @@ defmodule BankApi.Context.TransactionsTest do
     test "List yearly transactions" do
       assert {:ok, user} = create_admin()
       assert {:ok, _, token} = auth_admin()
+
+      seed_transactions(10)
 
       if assert Guardian.is_admin(token) == true do
         %{

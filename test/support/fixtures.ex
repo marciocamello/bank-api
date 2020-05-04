@@ -174,6 +174,22 @@ defmodule BankApi.Fixtures do
         acl: "admin"
       }
 
+      @account_to %{
+        email: "account_to@email.com",
+        firstName: "Test",
+        lastName: "Marcio",
+        phone: "37 98406 2829",
+        password: "123123123"
+      }
+
+      @account_from %{
+        email: "account_from@email.com",
+        firstName: "Test2",
+        lastName: "Andre",
+        phone: "37 98406 2829",
+        password: "123123123"
+      }
+
       @all_attrs %{
         "filter" => "",
         "type" => "",
@@ -217,14 +233,6 @@ defmodule BankApi.Fixtures do
       end
 
       @doc false
-      def seed_withdrawal(count) do
-        {:ok, user} = create_user_and_authenticate()
-        for n <- 1..count do
-          create_withdrawal(user)
-        end
-      end
-
-      @doc false
       defp create_transfer(user) do
         params =
           @transfer_confirm_attrs
@@ -233,9 +241,13 @@ defmodule BankApi.Fixtures do
       end
 
       @doc false
-      def seed_transfers(count) do
-        {:ok, user} = create_user_and_authenticate_transfer()
+      def seed_transactions(count) do
+        {:ok, user} = create_user(@account_to)
+        bind_account(user)
+        user = get_user(user.id)
+
         for n <- 1..count do
+          create_withdrawal(user)
           create_transfer(user)
         end
       end
