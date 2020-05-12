@@ -6,4 +6,4 @@ otp_release:
 script:
     - mix format --check-formatted --dry-run
     - mix credo --strict
-    - mix coveralls.json
+    - mix coveralls.html
