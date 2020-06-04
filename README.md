@@ -153,7 +153,7 @@ Users
 
 **Account**
 
-### `GET /account/create`    
+### `POST /account/create`    
 
 Create a new user account
 
